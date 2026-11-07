@@ -102,6 +102,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Firebase Admin SDK（Firestore接続用） -->
+        <dependency>
+            <groupId>com.google.firebase</groupId>
+            <artifactId>firebase-admin</artifactId>
+            <version>9.11.0</version>
+        </dependency>
+
     </dependencies>
 
     <!-- Mavenのビルド設定 -->
