@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>新規ユーザー登録 | CareerTrack</title>
+
+        <link rel="stylesheet" th:href="@{/css/style.css}" />
+    </head>
+
+    <body>
+        <main class="auth-container">
+            <section class="auth-card">
+                <h1>CareerTrack</h1>
+                <h2>新規ユーザー登録</h2>
+
+                <p class="auth-description">
+                    アカウントを作成してCareerTrackを利用しましょう。
+                </p>
+
+                <!-- 登録時のエラーメッセージ -->
+                <p
+                    class="error-message"
+                    th:if="${registrationError}"
+                    th:text="${registrationError}"
+                ></p>
+
+                <!-- 入力エラー -->
+                <form
+                    th:action="@{/register}"
+                    th:object="${userRegistrationRequest}"
+                    method="post"
+                >
+                    <div class="form-group">
+                        <label for="name">氏名</label>
+
+                        <input
+                            type="text"
+                            id="name"
+                            th:field="*{name}"
+                            placeholder="山田 太郎"
+                            maxlength="50"
+                            required
+                        />
+
+                        <p
+                            class="error-message"
+                            th:if="${#fields.hasErrors('name')}"
+                            th:errors="*{name}"
+                        ></p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">メールアドレス</label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            th:field="*{email}"
+                            placeholder="example@example.com"
+                            maxlength="254"
+                            required
+                        />
+
+                        <p
+                            class="error-message"
+                            th:if="${#fields.hasErrors('email')}"
+                            th:errors="*{email}"
+                        ></p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">パスワード</label>
+
+                        <input
+                            type="password"
+                            id="password"
+                            th:field="*{password}"
+                            placeholder="8文字以上"
+                            minlength="8"
+                            maxlength="72"
+                            autocomplete="new-password"
+                            required
+                        />
+
+                        <p
+                            class="error-message"
+                            th:if="${#fields.hasErrors('password')}"
+                            th:errors="*{password}"
+                        ></p>
+                    </div>
+
+                    <button type="submit" class="auth-button">
+                        アカウントを登録
+                    </button>
+                </form>
+
+                <p class="auth-link">
+                    すでにアカウントをお持ちの方は
+                    <a th:href="@{/login}">ログイン</a>
+                </p>
+            </section>
+        </main>
+    </body>
+</html>

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>ダッシュボード | CareerTrack</title>
+
+        <link rel="stylesheet" th:href="@{/css/style.css}" />
+    </head>
+
+    <body>
+        <main class="auth-container">
+            <section class="auth-card">
+                <h1>CareerTrack</h1>
+
+                <p class="auth-description">転職活動管理システム</p>
+
+                <hr />
+
+                <h2>ダッシュボード</h2>
+
+                <p>ログインに成功しました。</p>
+
+                <p>ログイン中のアカウント：</p>
+
+                <p>
+                    <strong th:text="${loginEmail}"></strong>
+                </p>
+
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit" class="auth-button">
+                        ログアウト
+                    </button>
+                </form>
+            </section>
+        </main>
+    </body>
+</html>
