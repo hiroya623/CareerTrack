@@ -80,4 +80,39 @@ public class UserService {
 
         return user;
     }
+
+    /**
+     * メールアドレスからユーザーIDを取得する
+     *
+     * ログイン中のユーザーを特定し、
+     * 企業情報などのユーザー別データを操作する際に使用する。
+     *
+     * @param email ログイン中のユーザーのメールアドレス
+     * @return ユーザーID
+     */
+    public String findUserIdByEmail(String email) {
+
+        // メールアドレスが未指定の場合はエラーとする
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException(
+                "メールアドレスが指定されていません。"
+            );
+        }
+
+        // メールアドレスの前後の空白を除去し、小文字に統一
+        String normalizedEmail = email.trim().toLowerCase(Locale.ROOT);
+
+        // Firestoreからメールアドレスに一致するユーザーを取得
+        AppUser user = userRepository.findByEmail(normalizedEmail);
+
+        // 該当するユーザーが存在しない場合はエラーとする
+        if (user == null) {
+            throw new IllegalArgumentException(
+                "ログインユーザーが見つかりません。"
+            );
+        }
+
+        // ユーザーIDを返す
+        return user.getId();
+    }
 }

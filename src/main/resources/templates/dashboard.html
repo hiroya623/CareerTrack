@@ -1,39 +1,82 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <title>ダッシュボード | CareerTrack</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <link rel="stylesheet" th:href="@{/css/style.css}" />
-    </head>
+    <title>ダッシュボード | CareerTrack</title>
 
-    <body>
-        <main class="auth-container">
-            <section class="auth-card">
-                <h1>CareerTrack</h1>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
 
-                <p class="auth-description">転職活動管理システム</p>
+<body>
 
-                <hr />
+    <main class="auth-container">
 
-                <h2>ダッシュボード</h2>
+        <section class="auth-card">
 
-                <p>ログインに成功しました。</p>
+            <!-- アプリケーション名 -->
+            <h1>CareerTrack</h1>
 
-                <p>ログイン中のアカウント：</p>
+            <p class="auth-description">
+                転職活動管理システム
+            </p>
 
-                <p>
-                    <strong th:text="${loginEmail}"></strong>
-                </p>
+            <hr>
 
-                <form th:action="@{/logout}" method="post">
-                    <button type="submit" class="auth-button">
-                        ログアウト
-                    </button>
-                </form>
-            </section>
-        </main>
-    </body>
+            <!-- ダッシュボード -->
+            <h2>ダッシュボード</h2>
+
+            <p>ログインに成功しました。</p>
+
+            <!-- ログインユーザー情報 -->
+            <p>ログイン中のアカウント：</p>
+
+            <p>
+                <strong th:text="${loginEmail}"></strong>
+            </p>
+
+            <!-- 企業管理メニュー -->
+            <div class="dashboard-actions">
+
+                <a th:href="@{/companies}"
+                   class="dashboard-action">
+
+                    <strong>企業一覧</strong>
+
+                    <span>
+                        登録した企業情報を確認する
+                    </span>
+
+                </a>
+
+                <a th:href="@{/companies/register}"
+                   class="dashboard-action">
+
+                    <strong>企業を登録</strong>
+
+                    <span>
+                        新しい企業情報を登録する
+                    </span>
+
+                </a>
+
+            </div>
+
+            <!-- ログアウト -->
+            <form th:action="@{/logout}" method="post">
+
+                <button type="submit" class="auth-button">
+                    ログアウト
+                </button>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</body>
 </html>

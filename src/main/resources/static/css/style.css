@@ -222,3 +222,348 @@ body {
         padding: 24px;
     }
 }
+
+/* ========================================
+   企業管理画面共通
+======================================== */
+
+/* ページ全体 */
+.page-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 24px;
+}
+
+/* ページヘッダー */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 28px;
+}
+
+.page-header h1 {
+    margin: 0 0 8px;
+    color: #1f2937;
+    font-size: 26px;
+}
+
+.page-header p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.header-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* ボタン共通 */
+.primary-button,
+.secondary-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 11px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.primary-button {
+    color: #ffffff;
+    background-color: #2563eb;
+    border: 1px solid #2563eb;
+}
+
+.primary-button:hover {
+    background-color: #1d4ed8;
+}
+
+.secondary-button {
+    color: #475569;
+    background-color: #ffffff;
+    border: 1px solid #cbd5e1;
+}
+
+.secondary-button:hover {
+    background-color: #f1f5f9;
+}
+
+/* 成功・エラーメッセージ */
+.success-message,
+.page-container .error-message {
+    margin-bottom: 20px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.success-message {
+    color: #166534;
+    background-color: #dcfce7;
+    border: 1px solid #bbf7d0;
+}
+
+.page-container .error-message {
+    color: #b91c1c;
+    background-color: #fee2e2;
+    border: 1px solid #fecaca;
+}
+
+/* 企業件数 */
+.list-summary {
+    margin-bottom: 20px;
+    padding: 16px 20px;
+    background-color: #ffffff;
+    border: 1px solid #e5eaf2;
+    border-radius: 10px;
+    color: #475569;
+}
+
+.list-summary strong {
+    margin: 0 4px;
+    color: #2563eb;
+    font-size: 22px;
+}
+
+/* 企業一覧グリッド */
+.company-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+/* 企業カード */
+.company-card {
+    overflow: hidden;
+    background-color: #ffffff;
+    border: 1px solid #e5eaf2;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+}
+
+.company-card-header {
+    padding: 20px 20px 12px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.company-card-header h2 {
+    margin: 0;
+    color: #1f2937;
+    font-size: 18px;
+}
+
+.company-card-body {
+    padding: 16px 20px;
+}
+
+.company-card-body p {
+    margin: 0 0 12px;
+    color: #64748b;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+}
+
+.company-card-body p:last-child {
+    margin-bottom: 0;
+}
+
+.company-card-body a {
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.company-card-body a:hover {
+    text-decoration: underline;
+}
+
+.company-card-footer {
+    padding: 10px 20px;
+    background-color: #f8fafc;
+}
+
+.company-id {
+    color: #94a3b8;
+    font-size: 11px;
+    overflow-wrap: anywhere;
+}
+
+/* 企業未登録時 */
+.empty-message {
+    padding: 56px 24px;
+    text-align: center;
+    background-color: #ffffff;
+    border: 1px dashed #cbd5e1;
+    border-radius: 12px;
+}
+
+.empty-message h2 {
+    margin: 0 0 12px;
+    color: #334155;
+    font-size: 20px;
+}
+
+.empty-message p {
+    margin-bottom: 24px;
+    color: #64748b;
+    font-size: 14px;
+}
+
+/* 企業登録フォーム */
+.form-container {
+    max-width: 760px;
+    padding: 32px;
+    background-color: #ffffff;
+    border: 1px solid #e5eaf2;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+}
+
+.form-container .form-group {
+    margin-bottom: 24px;
+}
+
+.form-container .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #374151;
+    font-weight: 600;
+}
+
+.form-container .form-group input,
+.form-container .form-group textarea {
+    width: 100%;
+    padding: 12px;
+    color: #333333;
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 14px;
+}
+
+.form-container .form-group textarea {
+    resize: vertical;
+    line-height: 1.6;
+}
+
+.form-container .form-group input:focus,
+.form-container .form-group textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.required-label {
+    margin-left: 6px;
+    padding: 3px 7px;
+    color: #ffffff;
+    background-color: #dc2626;
+    border-radius: 4px;
+    font-size: 11px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 32px;
+}
+
+/* ページ下部 */
+.page-footer {
+    margin-top: 32px;
+    text-align: center;
+}
+
+.page-footer a {
+    color: #2563eb;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+/* ダッシュボードの企業管理リンク */
+.dashboard-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin: 24px 0;
+}
+
+.dashboard-action {
+    display: block;
+    padding: 20px;
+    color: #1f2937;
+    background-color: #ffffff;
+    border: 1px solid #e5eaf2;
+    border-radius: 10px;
+    text-decoration: none;
+}
+
+.dashboard-action:hover {
+    border-color: #2563eb;
+    background-color: #eff6ff;
+}
+
+.dashboard-action strong {
+    display: block;
+    margin-bottom: 6px;
+    color: #2563eb;
+    font-size: 16px;
+}
+
+.dashboard-action span {
+    color: #64748b;
+    font-size: 13px;
+}
+
+/* スマートフォン対応 */
+@media (max-width: 768px) {
+    .page-container {
+        padding: 24px 16px;
+    }
+
+    .page-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .company-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-container {
+        padding: 22px 18px;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .header-actions {
+        width: 100%;
+    }
+
+    .header-actions a {
+        flex: 1;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .form-actions a,
+    .form-actions button {
+        width: 100%;
+    }
+}

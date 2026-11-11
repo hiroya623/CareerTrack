@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>企業一覧 | CareerTrack</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+    <div class="page-container">
+
+        <!-- ページヘッダー -->
+        <header class="page-header">
+            <div>
+                <h1>企業一覧</h1>
+                <p>応募を検討している企業や選考中の企業を管理します。</p>
+            </div>
+
+            <div class="header-actions">
+                <a th:href="@{/}" class="secondary-button">
+                    ダッシュボード
+                </a>
+
+                <a th:href="@{/companies/register}" class="primary-button">
+                    ＋ 企業を登録
+                </a>
+            </div>
+        </header>
+
+        <!-- 登録成功メッセージ -->
+        <div th:if="${successMessage}"
+             class="success-message"
+             th:text="${successMessage}">
+        </div>
+
+        <!-- 企業件数 -->
+        <div class="list-summary">
+            <span>登録企業数：</span>
+            <strong th:text="${#lists.size(companies)}">0</strong>
+            <span>社</span>
+        </div>
+
+        <!-- 企業一覧 -->
+        <section class="company-list">
+
+            <!-- 企業が登録されている場合 -->
+            <div th:if="${!#lists.isEmpty(companies)}"
+                 class="company-grid">
+
+                <article class="company-card"
+                         th:each="company : ${companies}">
+
+                    <div class="company-card-header">
+                        <h2 th:text="${company.companyName}">
+                            企業名
+                        </h2>
+                    </div>
+
+                    <div class="company-card-body">
+
+                        <!-- 所在地 -->
+                        <p class="company-location"
+                           th:if="${company.location != null
+                                   and !#strings.isEmpty(company.location)}">
+
+                            <span>所在地：</span>
+                            <span th:text="${company.location}">
+                                所在地
+                            </span>
+                        </p>
+
+                        <!-- 公式サイト -->
+                        <p class="company-url"
+                           th:if="${company.companyUrl != null
+                                   and !#strings.isEmpty(company.companyUrl)}">
+
+                            <a th:href="${company.companyUrl}"
+                               target="_blank"
+                               rel="noopener noreferrer">
+                                公式サイトを開く
+                            </a>
+                        </p>
+
+                        <!-- 最終更新日時 -->
+                        <p class="company-updated"
+                           th:if="${company.updatedAt != null}">
+
+                            <span>最終更新：</span>
+                            <span th:text="${#dates.format(
+                                company.updatedAt,
+                                'yyyy/MM/dd HH:mm')}">
+                                2026/11/11 10:00
+                            </span>
+                        </p>
+
+                    </div>
+
+                    <!-- 企業詳細画面へのリンク（次のSTEPで実装） -->
+                    <div class="company-card-footer">
+                        <span class="company-id"
+                              th:text="${company.id}">
+                            企業ID
+                        </span>
+                    </div>
+
+                </article>
+
+            </div>
+
+            <!-- 企業が未登録の場合 -->
+            <div th:if="${#lists.isEmpty(companies)}"
+                 class="empty-message">
+
+                <h2>企業がまだ登録されていません</h2>
+
+                <p>
+                    気になる企業や応募を検討している企業を登録しましょう。
+                </p>
+
+                <a th:href="@{/companies/register}"
+                   class="primary-button">
+                    最初の企業を登録する
+                </a>
+
+            </div>
+
+        </section>
+
+        <!-- ページ下部 -->
+        <footer class="page-footer">
+            <a th:href="@{/}">
+                ダッシュボードへ戻る
+            </a>
+        </footer>
+
+    </div>
+
+</body>
+</html>

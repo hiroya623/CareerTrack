@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>企業登録 | CareerTrack</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+    <div class="page-container">
+
+        <!-- ページヘッダー -->
+        <header class="page-header">
+            <div>
+                <h1>企業登録</h1>
+                <p>管理したい企業の基本情報を登録します。</p>
+            </div>
+
+            <div class="header-actions">
+                <a th:href="@{/companies}" class="secondary-button">
+                    企業一覧へ戻る
+                </a>
+            </div>
+        </header>
+
+        <!-- 入力エラーメッセージ -->
+        <div th:if="${errorMessage}"
+             class="error-message"
+             th:text="${errorMessage}">
+        </div>
+
+        <!-- 企業登録フォーム -->
+        <section class="form-container">
+
+            <form th:action="@{/companies/register}"
+                  th:object="${company}"
+                  method="post">
+
+                <!-- 企業名 -->
+                <div class="form-group">
+                    <label for="companyName">
+                        企業名
+                        <span class="required-label">必須</span>
+                    </label>
+
+                    <input type="text"
+                           id="companyName"
+                           th:field="*{companyName}"
+                           maxlength="100"
+                           placeholder="例：株式会社〇〇"
+                           required>
+                </div>
+
+                <!-- 企業公式サイトURL -->
+                <div class="form-group">
+                    <label for="companyUrl">
+                        企業公式サイトURL
+                    </label>
+
+                    <input type="url"
+                           id="companyUrl"
+                           th:field="*{companyUrl}"
+                           maxlength="2048"
+                           placeholder="https://example.com">
+                </div>
+
+                <!-- 所在地 -->
+                <div class="form-group">
+                    <label for="location">
+                        所在地
+                    </label>
+
+                    <input type="text"
+                           id="location"
+                           th:field="*{location}"
+                           maxlength="100"
+                           placeholder="例：福岡県福岡市">
+                </div>
+
+                <!-- 企業概要 -->
+                <div class="form-group">
+                    <label for="overview">
+                        企業概要・事業内容
+                    </label>
+
+                    <textarea id="overview"
+                              th:field="*{overview}"
+                              maxlength="1000"
+                              rows="5"
+                              placeholder="企業の事業内容や特徴を入力してください。">
+                    </textarea>
+                </div>
+
+                <!-- 自分用メモ -->
+                <div class="form-group">
+                    <label for="memo">
+                        自分用メモ
+                    </label>
+
+                    <textarea id="memo"
+                              th:field="*{memo}"
+                              maxlength="5000"
+                              rows="6"
+                              placeholder="気になった点、企業研究の内容などを入力してください。">
+                    </textarea>
+                </div>
+
+                <!-- ボタン -->
+                <div class="form-actions">
+
+                    <a th:href="@{/companies}"
+                       class="secondary-button">
+                        キャンセル
+                    </a>
+
+                    <button type="submit"
+                            class="primary-button">
+                        企業を登録する
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </div>
+
+</body>
+</html>
