@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ログイン | CareerTrack</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+    <main class="auth-container">
+
+        <section class="auth-card">
+
+            <h1>CareerTrack</h1>
+
+            <p class="auth-description">
+                転職活動管理システム
+            </p>
+
+            <h2>ログイン</h2>
+
+            <!-- ログイン失敗時のメッセージ -->
+            <p class="error-message" th:if="${param.error}">
+                メールアドレスまたはパスワードが正しくありません。
+            </p>
+
+            <!-- ログアウト完了時のメッセージ -->
+            <p th:if="${param.logout}">
+                ログアウトしました。
+            </p>
+
+            <!-- ログインフォーム -->
+            <form th:action="@{/login}" method="post">
+
+                <div class="form-group">
+
+                    <label for="username">
+                        メールアドレス
+                    </label>
+
+                    <input type="email" id="username" name="username" placeholder="example@example.com"
+                        autocomplete="username" required>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="password">
+                        パスワード
+                    </label>
+
+                    <input type="password" id="password" name="password" placeholder="パスワードを入力してください"
+                        autocomplete="current-password" required>
+
+                </div>
+
+                <button type="submit" class="auth-button">
+                    ログイン
+                </button>
+
+            </form>
+
+            <p class="auth-link">
+                アカウントをお持ちでない方は
+                <a th:href="@{/register}">
+                    新規ユーザー登録
+                </a>
+            </p>
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>

@@ -60,8 +60,10 @@ public class SecurityConfig {
 
         http
             .authenticationProvider(authenticationProvider)
+
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
+                    "/login",
                     "/register",
                     "/css/**",
                     "/js/**",
@@ -69,10 +71,17 @@ public class SecurityConfig {
                 ).permitAll()
                 .anyRequest().authenticated()
             )
+
             .formLogin(form -> form
+                .loginPage("/login")
+                .loginProcessingUrl("/login")
+                .usernameParameter("username")
+                .passwordParameter("password")
+                .failureUrl("/login?error")
                 .defaultSuccessUrl("/", true)
                 .permitAll()
             )
+
             .logout(logout -> logout
                 .logoutSuccessUrl("/login?logout")
                 .permitAll()
