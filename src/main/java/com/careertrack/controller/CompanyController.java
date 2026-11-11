@@ -17,6 +17,8 @@ import com.careertrack.dto.CompanyListItem;
 import com.careertrack.model.Company;
 import com.careertrack.service.CompanyService;
 import com.careertrack.service.UserService;
+import com.careertrack.service.ApplicationService;
+import com.careertrack.dto.ApplicationListItem;
 
 /**
  * 企業情報に関する画面・リクエストを管理するController
@@ -34,18 +36,25 @@ public class CompanyController {
      * ユーザー情報に関する業務処理
      */
     private final UserService userService;
+    /**
+     * 応募情報に関する業務処理
+     */
+    private final ApplicationService applicationService;
 
     /**
      * コンストラクタ
      *
      * @param companyService 企業情報のService
+     * @param applicationService 応募情報のService
      * @param userService ユーザー情報のService
      */
     public CompanyController(
             CompanyService companyService,
+            ApplicationService applicationService,
             UserService userService) {
 
         this.companyService = companyService;
+        this.applicationService = applicationService;
         this.userService = userService;
     }
 
@@ -75,7 +84,7 @@ public class CompanyController {
         return "company-list";
     }
 
-        /**
+    /**
      * 企業詳細画面を表示する
      *
      * @param companyId 表示対象の企業ID
@@ -110,11 +119,18 @@ public class CompanyController {
             return "redirect:/companies";
         }
 
+        // この企業に紐付く応募情報を取得
+        List<ApplicationListItem> applications =
+                applicationService.findByCompanyId(userId, companyId);
+
         // 企業情報を画面に渡す
         model.addAttribute("company", company);
 
-        // 企業IDも画面に渡す
+        // 企業IDを画面に渡す
         model.addAttribute("companyId", companyId);
+
+        // 応募情報一覧を画面に渡す
+        model.addAttribute("applications", applications);
 
         return "company-detail";
     }

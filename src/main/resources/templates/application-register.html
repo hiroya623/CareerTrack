@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>応募情報登録 | CareerTrack</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+    <main class="page-container">
+
+        <header class="page-header">
+            <div>
+                <h1>応募情報登録</h1>
+                <p th:text="${company.companyName}">企業名</p>
+            </div>
+
+            <div class="header-actions">
+                <a th:href="@{/companies/{companyId}(companyId=${companyId})}" class="secondary-button">
+                    企業詳細へ戻る
+                </a>
+            </div>
+        </header>
+
+        <section class="form-container">
+
+            <div th:if="${errorMessage}" class="error-message" th:text="${errorMessage}">
+            </div>
+
+            <form th:action="@{/companies/{companyId}/applications/register(companyId=${companyId})}"
+                th:object="${application}" method="post">
+
+                <div class="form-group">
+                    <label>企業名</label>
+                    <input type="text" th:value="${company.companyName}" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="jobTitle">職種・求人名</label>
+                    <input type="text" id="jobTitle" th:field="*{jobTitle}" maxlength="100" placeholder="例：Webエンジニア">
+                </div>
+
+                <div class="form-group">
+                    <label for="status">応募・選考状況</label>
+                    <select id="status" th:field="*{status}" required>
+                        <option th:each="status : ${statuses}" th:value="${status.value}" th:text="${status.label}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="appliedAt">応募日</label>
+                    <input type="date" id="appliedAt" th:field="*{appliedAt}">
+                </div>
+
+                <div class="form-group">
+                    <label for="memo">応募・選考メモ</label>
+                    <textarea id="memo" th:field="*{memo}" rows="6" maxlength="5000"
+                        placeholder="求人内容や応募時のメモを入力してください。">
+                    </textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="primary-button">
+                        応募情報を登録
+                    </button>
+
+                    <a th:href="@{/companies/{companyId}(companyId=${companyId})}" class="secondary-button">
+                        キャンセル
+                    </a>
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>

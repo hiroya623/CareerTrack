@@ -34,6 +34,10 @@
         <div th:if="${successMessage}" class="success-message" th:text="${successMessage}">
         </div>
 
+        <!-- エラーメッセージ -->
+        <div th:if="${errorMessage}" class="error-message" th:text="${errorMessage}">
+        </div>
+
         <!-- 企業件数 -->
         <div class="list-summary">
             <span>登録企業数：</span>

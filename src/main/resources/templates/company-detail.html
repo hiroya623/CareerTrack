@@ -177,13 +177,149 @@
 
         </section>
 
+        <!-- 応募情報一覧 -->
+        <section class="company-related-section">
+
+            <div class="page-header">
+
+                <div>
+                    <h2>応募・選考情報</h2>
+                    <p>この企業に対する応募や選考の状況を管理できます。</p>
+                </div>
+
+                <!-- 応募情報登録画面へのリンク -->
+                <a th:href="@{/companies/{companyId}/applications/register(companyId=${companyId})}"
+                    class="primary-button">
+                    ＋ 応募情報を追加
+                </a>
+
+            </div>
+
+            <!-- 登録成功メッセージ -->
+            <div class="success-message" th:if="${successMessage != null}" th:text="${successMessage}">
+            </div>
+
+            <!-- エラーメッセージ -->
+            <div class="error-message" th:if="${errorMessage != null}" th:text="${errorMessage}">
+            </div>
+
+            <!-- 応募情報が存在しない場合 -->
+            <div class="empty-message" th:if="${#lists.isEmpty(applications)}">
+
+                <p>応募情報はまだ登録されていません。</p>
+
+                <p>「応募情報を追加」から登録してください。</p>
+
+            </div>
+
+            <!-- 応募情報一覧 -->
+            <div class="company-grid" th:unless="${#lists.isEmpty(applications)}">
+
+                <article class="company-card" th:each="applicationItem : ${applications}">
+
+                    <div class="company-card-header">
+
+                        <h3 th:if="${applicationItem.jobTitle != null
+                            and !#strings.isEmpty(applicationItem.jobTitle)}" th:text="${applicationItem.jobTitle}">
+                            職種名
+                        </h3>
+
+                        <h3 th:if="${applicationItem.jobTitle == null
+                            or #strings.isEmpty(applicationItem.jobTitle)}">
+                            職種未設定
+                        </h3>
+
+                    </div>
+
+                    <!-- 選考ステータス -->
+                    <div class="detail-item">
+
+                        <h4>選考状況</h4>
+
+                        <p th:switch="${applicationItem.status}">
+
+                            <span th:case="'INTERESTED'">気になる企業</span>
+                            <span th:case="'SCOUT'">スカウト</span>
+                            <span th:case="'CASUAL_INTERVIEW'">カジュアル面談</span>
+                            <span th:case="'DOCUMENTS'">書類選考</span>
+                            <span th:case="'INTERVIEW'">面接</span>
+                            <span th:case="'ACCEPTED'">採用</span>
+                            <span th:case="'REJECTED'">不採用</span>
+                            <span th:case="'DECLINED'">辞退</span>
+                            <span th:case="*">未設定</span>
+
+                        </p>
+
+                    </div>
+
+                    <!-- 応募日 -->
+                    <div class="detail-item">
+
+                        <h4>応募日</h4>
+
+                        <p th:if="${applicationItem.appliedAt != null}"
+                            th:text="${#dates.format(applicationItem.appliedAt, 'yyyy/MM/dd')}">
+                            応募日
+                        </p>
+
+                        <p th:if="${applicationItem.appliedAt == null}">
+                            未設定
+                        </p>
+
+                    </div>
+
+                    <!-- メモ -->
+                    <div class="detail-item">
+
+                        <h4>メモ</h4>
+
+                        <p class="detail-text" th:if="${applicationItem.memo != null
+                           and !#strings.isEmpty(applicationItem.memo)}" th:text="${applicationItem.memo}">
+                            メモ
+                        </p>
+
+                        <p th:if="${applicationItem.memo == null
+                           or #strings.isEmpty(applicationItem.memo)}">
+                            未登録
+                        </p>
+
+                    </div>
+
+                    <!-- 編集・削除 -->
+                    <div class="header-actions">
+
+                        <a th:href="@{/companies/{companyId}/applications/{applicationId}/edit(
+                                companyId=${companyId},
+                                applicationId=${applicationItem.id})}" class="primary-button">
+                            編集
+                        </a>
+
+                        <form th:action="@{/companies/{companyId}/applications/{applicationId}/delete(
+                                    companyId=${companyId},
+                                    applicationId=${applicationItem.id})}" method="post"
+                            onsubmit="return confirm('この応募情報を削除してもよろしいですか？');">
+
+                            <button type="submit" class="secondary-button">
+                                削除
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+        </section>
+
         <!-- 今後の機能追加予定エリア -->
         <section class="company-related-section">
 
-            <h2>関連情報</h2>
+            <h2>その他の関連情報</h2>
 
             <p>
-                今後、この企業に紐付く応募情報・提出書類・面接情報などを
+                今後、提出書類・面接情報・スケジュールなどを
                 ここから管理できるようにします。
             </p>
 
