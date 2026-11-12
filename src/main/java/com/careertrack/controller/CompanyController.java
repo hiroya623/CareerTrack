@@ -21,6 +21,8 @@ import com.careertrack.service.UserService;
 import com.careertrack.service.ApplicationService;
 import com.careertrack.dto.ApplicationListItem;
 import com.careertrack.model.StatusHistory;
+import com.careertrack.service.DocumentService;
+import com.careertrack.model.Document;
 
 /**
  * 企業情報に関する画面・リクエストを管理するController
@@ -42,21 +44,28 @@ public class CompanyController {
      * 応募情報に関する業務処理
      */
     private final ApplicationService applicationService;
+    /**
+     * 書類情報に関する業務処理
+     */
+    private final DocumentService documentService;
 
     /**
      * コンストラクタ
      *
      * @param companyService     企業情報のService
      * @param applicationService 応募情報のService
+     * @param documentService    書類情報のService
      * @param userService        ユーザー情報のService
      */
     public CompanyController(
             CompanyService companyService,
             ApplicationService applicationService,
+            DocumentService documentService,
             UserService userService) {
 
         this.companyService = companyService;
         this.applicationService = applicationService;
+        this.documentService = documentService;
         this.userService = userService;
     }
 
@@ -123,6 +132,9 @@ public class CompanyController {
         // この企業に紐付く応募情報を取得
         List<ApplicationListItem> applications = applicationService.findByCompanyId(userId, companyId);
 
+        // この企業に紐付く書類情報を取得
+        List<Document> documents = documentService.findAll(userId, companyId);
+
         // 応募情報ごとのステータス変更履歴を格納する
         Map<String, List<StatusHistory>> statusHistories = new java.util.LinkedHashMap<>();
 
@@ -144,6 +156,9 @@ public class CompanyController {
 
         // 応募情報一覧を画面に渡す
         model.addAttribute("applications", applications);
+
+        // 書類情報一覧を画面に渡す
+        model.addAttribute("documents", documents);
 
         // 応募情報ごとのステータス変更履歴を画面に渡す
         model.addAttribute("statusHistories", statusHistories);

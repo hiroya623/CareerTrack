@@ -425,13 +425,179 @@
                 </div>
             </section>
 
-            <!-- 今後の機能追加予定エリア -->
+            <!-- 書類管理エリア -->
             <section class="company-related-section">
-                <h2>その他の関連情報</h2>
+                <!-- セクションヘッダー -->
+                <div class="page-header">
+                    <div>
+                        <h2>提出書類管理</h2>
+                        <p>
+                            この企業に提出する書類の期限や提出状況を管理できます。
+                        </p>
+                    </div>
 
-                <p>
-                    今後、提出書類・面接情報・スケジュールなどを
-                    ここから管理できるようにします。
+                    <!-- 書類登録画面へのリンク -->
+                    <a
+                        th:href="@{/companies/{companyId}/documents/new(companyId=${companyId})}"
+                        class="primary-button"
+                    >
+                        ＋ 書類を追加
+                    </a>
+                </div>
+
+                <!-- 書類登録・更新・削除の成功メッセージ -->
+                <div
+                    class="success-message"
+                    th:if="${documentSuccessMessage != null}"
+                    th:text="${documentSuccessMessage}"
+                ></div>
+
+                <!-- 書類登録・更新・削除のエラーメッセージ -->
+                <div
+                    class="error-message"
+                    th:if="${documentErrorMessage != null}"
+                    th:text="${documentErrorMessage}"
+                ></div>
+
+                <!-- 書類が存在しない場合 -->
+                <div class="empty-message" th:if="${#lists.isEmpty(documents)}">
+                    <p>書類はまだ登録されていません。</p>
+
+                    <p>「書類を追加」から提出書類を登録してください。</p>
+                </div>
+
+                <!-- 書類一覧 -->
+                <div
+                    class="company-grid"
+                    th:unless="${#lists.isEmpty(documents)}"
+                >
+                    <article
+                        class="company-card"
+                        th:each="document : ${documents}"
+                    >
+                        <!-- 書類名 -->
+                        <div class="company-card-header">
+                            <h3 th:text="${document.documentName}">書類名</h3>
+                        </div>
+
+                        <!-- 提出状況 -->
+                        <div class="detail-item">
+                            <h4>提出状況</h4>
+
+                            <p th:switch="${document.submissionStatus}">
+                                <span th:case="'NOT_SUBMITTED'">未提出</span>
+                                <span th:case="'SUBMITTED'">提出済み</span>
+                                <span th:case="*">未設定</span>
+                            </p>
+                        </div>
+
+                        <!-- 提出期限日 -->
+                        <div class="detail-item">
+                            <h4>提出期限日</h4>
+
+                            <p
+                                th:if="${document.deadlineDate != null}"
+                                th:text="${#dates.format(document.deadlineDate, 'yyyy/MM/dd')}"
+                            >
+                                提出期限日
+                            </p>
+
+                            <p th:if="${document.deadlineDate == null}">
+                                未設定
+                            </p>
+                        </div>
+
+                        <!-- 提出予定日 -->
+                        <div class="detail-item">
+                            <h4>提出予定日</h4>
+
+                            <p
+                                th:if="${document.plannedSubmissionDate != null}"
+                                th:text="${#dates.format(document.plannedSubmissionDate, 'yyyy/MM/dd')}"
+                            >
+                                提出予定日
+                            </p>
+
+                            <p
+                                th:if="${document.plannedSubmissionDate == null}"
+                            >
+                                未設定
+                            </p>
+                        </div>
+
+                        <!-- 実際の提出日 -->
+                        <div class="detail-item">
+                            <h4>実際の提出日</h4>
+
+                            <p
+                                th:if="${document.submittedDate != null}"
+                                th:text="${#dates.format(document.submittedDate, 'yyyy/MM/dd')}"
+                            >
+                                実際の提出日
+                            </p>
+
+                            <p th:if="${document.submittedDate == null}">
+                                未提出
+                            </p>
+                        </div>
+
+                        <!-- メモ -->
+                        <div class="detail-item">
+                            <h4>メモ</h4>
+
+                            <p
+                                class="detail-text"
+                                th:if="${document.memo != null
+                        and !#strings.isEmpty(document.memo)}"
+                                th:text="${document.memo}"
+                            >
+                                メモ
+                            </p>
+
+                            <p
+                                th:if="${document.memo == null
+                        or #strings.isEmpty(document.memo)}"
+                            >
+                                未登録
+                            </p>
+                        </div>
+
+                        <!-- 編集・削除 -->
+                        <div class="header-actions">
+                            <!-- 編集画面へのリンク -->
+                            <a
+                                th:href="@{/companies/{companyId}/documents/{documentId}/edit(
+                        companyId=${companyId},
+                        documentId=${document.id})}"
+                                class="primary-button"
+                            >
+                                編集
+                            </a>
+
+                            <!-- 削除フォーム -->
+                            <form
+                                th:action="@{/companies/{companyId}/documents/{documentId}/delete(
+                        companyId=${companyId},
+                        documentId=${document.id})}"
+                                method="post"
+                                onsubmit="
+                                    return confirm(
+                                        'この書類情報を削除してもよろしいですか？',
+                                    );
+                                "
+                            >
+                                <button type="submit" class="secondary-button">
+                                    削除
+                                </button>
+                            </form>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- ファイル保存に関する説明 -->
+                <p class="form-description">
+                    ※
+                    現在は書類ファイル本体を保存せず、書類名・提出期限・提出状況などの管理情報のみを保存します。
                 </p>
             </section>
 
