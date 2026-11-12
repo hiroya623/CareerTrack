@@ -33,7 +33,7 @@ public class CompanyService {
     /**
      * Repositoryを受け取るコンストラクタ
      *
-     * @param companyRepository 企業情報Repository
+     * @param companyRepository     企業情報Repository
      * @param applicationRepository 応募情報Repository
      */
     public CompanyService(
@@ -47,7 +47,7 @@ public class CompanyService {
     /**
      * 企業情報を新規登録する
      *
-     * @param userId ログインユーザーID
+     * @param userId  ログインユーザーID
      * @param company 登録する企業情報
      * @return 登録された企業ID
      */
@@ -68,9 +68,9 @@ public class CompanyService {
     /**
      * 既存の企業情報を更新する
      *
-     * @param userId ログインユーザーID
+     * @param userId    ログインユーザーID
      * @param companyId 更新する企業ID
-     * @param company 更新後の企業情報
+     * @param company   更新後の企業情報
      * @return 更新された企業ID
      */
     public String update(String userId, String companyId, Company company) {
@@ -104,7 +104,7 @@ public class CompanyService {
     /**
      * 企業IDを指定して企業情報を取得する
      *
-     * @param userId ログインユーザーID
+     * @param userId    ログインユーザーID
      * @param companyId 企業ID
      * @return 企業情報
      */
@@ -128,13 +128,12 @@ public class CompanyService {
         return companyRepository.findAll(userId);
     }
 
-
     /**
      * 企業情報を削除する
      *
      * 応募情報が紐付いている企業は削除できないようにする。
      *
-     * @param userId ログインユーザーID
+     * @param userId    ログインユーザーID
      * @param companyId 削除対象の企業ID
      */
     public void delete(String userId, String companyId) {
@@ -152,14 +151,13 @@ public class CompanyService {
         }
 
         // 企業に紐付いている応募情報を取得する
-        List<ApplicationListItem> applications =
-            applicationRepository.findByCompanyId(userId, companyId);
+        List<ApplicationListItem> applications = applicationRepository.findByCompanyId(userId, companyId);
 
         // 応募情報が存在する場合は削除を禁止する
         if (!applications.isEmpty()) {
             throw new IllegalArgumentException(
                     "応募情報が登録されているため、企業情報を削除できません。"
-                    + "先に応募情報を削除してください。");
+                            + "先に応募情報を削除してください。");
         }
 
         // 応募情報が存在しない場合のみ企業情報を削除する

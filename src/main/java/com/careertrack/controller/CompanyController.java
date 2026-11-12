@@ -2,6 +2,7 @@
 package com.careertrack.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ import com.careertrack.service.CompanyService;
 import com.careertrack.service.UserService;
 import com.careertrack.service.ApplicationService;
 import com.careertrack.dto.ApplicationListItem;
+import com.careertrack.model.StatusHistory;
 
 /**
  * 企業情報に関する画面・リクエストを管理するController
@@ -44,9 +46,9 @@ public class CompanyController {
     /**
      * コンストラクタ
      *
-     * @param companyService 企業情報のService
+     * @param companyService     企業情報のService
      * @param applicationService 応募情報のService
-     * @param userService ユーザー情報のService
+     * @param userService        ユーザー情報のService
      */
     public CompanyController(
             CompanyService companyService,
@@ -62,7 +64,7 @@ public class CompanyController {
      * 企業一覧画面を表示する
      *
      * @param authentication ログイン中のユーザー情報
-     * @param model 画面に渡すデータ
+     * @param model          画面に渡すデータ
      * @return 企業一覧画面
      */
     @GetMapping
@@ -75,8 +77,7 @@ public class CompanyController {
                 authentication.getName());
 
         // ログインユーザー本人の企業情報を取得
-        List<CompanyListItem> companies =
-                companyService.findAll(userId);
+        List<CompanyListItem> companies = companyService.findAll(userId);
 
         // 企業一覧を画面に渡す
         model.addAttribute("companies", companies);
@@ -87,9 +88,9 @@ public class CompanyController {
     /**
      * 企業詳細画面を表示する
      *
-     * @param companyId 表示対象の企業ID
-     * @param authentication ログイン中のユーザー情報
-     * @param model 画面に渡すデータ
+     * @param companyId          表示対象の企業ID
+     * @param authentication     ログイン中のユーザー情報
+     * @param model              画面に渡すデータ
      * @param redirectAttributes リダイレクト先に渡すメッセージ
      * @return 企業詳細画面、または企業一覧画面
      */
@@ -120,8 +121,20 @@ public class CompanyController {
         }
 
         // この企業に紐付く応募情報を取得
-        List<ApplicationListItem> applications =
-                applicationService.findByCompanyId(userId, companyId);
+        List<ApplicationListItem> applications = applicationService.findByCompanyId(userId, companyId);
+
+        // 応募情報ごとのステータス変更履歴を格納する
+        Map<String, List<StatusHistory>> statusHistories = new java.util.LinkedHashMap<>();
+
+        // 各応募情報の履歴を取得する
+        for (ApplicationListItem applicationItem : applications) {
+
+            List<StatusHistory> histories = applicationService.findStatusHistories(
+                    userId,
+                    applicationItem.getId());
+
+            statusHistories.put(applicationItem.getId(), histories);
+        }
 
         // 企業情報を画面に渡す
         model.addAttribute("company", company);
@@ -132,15 +145,18 @@ public class CompanyController {
         // 応募情報一覧を画面に渡す
         model.addAttribute("applications", applications);
 
+        // 応募情報ごとのステータス変更履歴を画面に渡す
+        model.addAttribute("statusHistories", statusHistories);
+
         return "company-detail";
     }
 
-        /**
+    /**
      * 企業情報編集画面を表示する
      *
-     * @param companyId 編集対象の企業ID
-     * @param authentication ログイン中のユーザー情報
-     * @param model 画面に渡すデータ
+     * @param companyId          編集対象の企業ID
+     * @param authentication     ログイン中のユーザー情報
+     * @param model              画面に渡すデータ
      * @param redirectAttributes リダイレクト先に渡すメッセージ
      * @return 企業情報編集画面
      */
@@ -179,14 +195,14 @@ public class CompanyController {
         return "company-edit";
     }
 
-        /**
+    /**
      * 企業情報を更新する
      *
-     * @param companyId 更新対象の企業ID
-     * @param company 更新する企業情報
-     * @param authentication ログイン中のユーザー情報
+     * @param companyId          更新対象の企業ID
+     * @param company            更新する企業情報
+     * @param authentication     ログイン中のユーザー情報
      * @param redirectAttributes リダイレクト先に渡すメッセージ
-     * @param model 入力画面に渡すデータ
+     * @param model              入力画面に渡すデータ
      * @return 更新後は企業詳細画面へ移動
      */
     @PostMapping("/{companyId}/edit")
@@ -233,8 +249,8 @@ public class CompanyController {
     /**
      * 企業情報を削除する
      *
-     * @param companyId 削除対象の企業ID
-     * @param authentication ログイン中のユーザー情報
+     * @param companyId          削除対象の企業ID
+     * @param authentication     ログイン中のユーザー情報
      * @param redirectAttributes リダイレクト先に渡すメッセージ
      * @return 削除後は企業一覧画面へ移動
      */
@@ -291,10 +307,10 @@ public class CompanyController {
     /**
      * 企業情報を新規登録する
      *
-     * @param company 登録フォームから受け取った企業情報
-     * @param authentication ログイン中のユーザー情報
+     * @param company            登録フォームから受け取った企業情報
+     * @param authentication     ログイン中のユーザー情報
      * @param redirectAttributes リダイレクト先に渡すメッセージ
-     * @param model 入力画面に渡すデータ
+     * @param model              入力画面に渡すデータ
      * @return 登録後は企業一覧画面へ移動
      */
     @PostMapping("/register")

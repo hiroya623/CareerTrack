@@ -11,6 +11,9 @@ import com.careertrack.model.Application;
 import com.careertrack.repository.ApplicationRepository;
 import com.careertrack.repository.CompanyRepository;
 import com.careertrack.dto.ApplicationListItem;
+import com.careertrack.model.StatusHistory;
+import com.careertrack.repository.StatusHistoryRepository;
+import com.careertrack.model.StatusHistory;
 
 /**
  * 応募情報に関する業務処理を管理するServiceクラス
@@ -30,19 +33,26 @@ public class ApplicationService {
      * 企業情報Repository
      */
     private final CompanyRepository companyRepository;
+    /**
+     * ステータス変更履歴Repository
+     */
+    private final StatusHistoryRepository statusHistoryRepository;
 
     /**
      * Repositoryを受け取るコンストラクタ
      *
      * @param applicationRepository 応募情報Repository
      * @param companyRepository 企業情報Repository
+     * @param statusHistoryRepository ステータス変更履歴Repository
      */
     public ApplicationService(
             ApplicationRepository applicationRepository,
-            CompanyRepository companyRepository) {
+            CompanyRepository companyRepository,
+            StatusHistoryRepository statusHistoryRepository) {
 
         this.applicationRepository = applicationRepository;
         this.companyRepository = companyRepository;
+        this.statusHistoryRepository = statusHistoryRepository;
     }
 
     /**
@@ -62,8 +72,21 @@ public class ApplicationService {
         application.setCreatedAt(now);
         application.setUpdatedAt(now);
 
-        // 応募情報を保存する
-        return applicationRepository.save(userId, null, application);
+        // 応募情報をFirestoreに保存する
+        String applicationId =
+                applicationRepository.save(userId, null, application);
+
+        // 初期ステータスの履歴を作成する
+        StatusHistory history = new StatusHistory();
+        history.setPreviousStatus(null);
+        history.setNewStatus(application.getStatus());
+        history.setChangedAt(now);
+        history.setMemo(null);
+
+        // ステータス履歴をFirestoreに保存する
+        statusHistoryRepository.save(userId, applicationId, history);
+
+        return applicationId;
     }
 
     /**
@@ -93,15 +116,43 @@ public class ApplicationService {
                     "更新対象の応募情報が見つかりません。");
         }
 
+        // 変更前のステータスを保持する
+        String previousStatus = existingApplication.getStatus();
+
         // 入力内容と関連企業の存在を確認する
         validateAndNormalize(userId, application);
 
         // 登録日時は維持し、更新日時だけ変更する
+        Date now = new Date();
         application.setCreatedAt(existingApplication.getCreatedAt());
-        application.setUpdatedAt(new Date());
+        application.setUpdatedAt(now);
 
         // 応募情報を更新する
         applicationRepository.save(userId, applicationId, application);
+
+        // ステータスが変更された場合だけ履歴を保存する
+        if (!java.util.Objects.equals(
+                previousStatus,
+                application.getStatus())) {
+
+            StatusHistory history = new StatusHistory();
+
+            // 変更前後のステータスを設定する
+            history.setPreviousStatus(previousStatus);
+            history.setNewStatus(application.getStatus());
+
+            // 変更日時を設定する
+            history.setChangedAt(now);
+
+            // 現時点では変更時の補足メモは設定しない
+            history.setMemo(null);
+
+            // ステータス変更履歴を保存する
+            statusHistoryRepository.save(
+                    userId,
+                    applicationId,
+                    history);
+        }
     }
 
     /**
@@ -155,6 +206,33 @@ public class ApplicationService {
         }
 
         return applicationRepository.findByCompanyId(userId, companyId);
+    }
+
+    /**
+     * 指定された応募情報のステータス変更履歴を取得する
+     *
+     * @param userId ログインユーザーID
+     * @param applicationId 応募情報ID
+     * @return ステータス変更履歴一覧
+     */
+    public List<StatusHistory> findStatusHistories(
+            String userId,
+            String applicationId) {
+
+        // 応募情報IDを確認する
+        if (!StringUtils.hasText(applicationId)) {
+            throw new IllegalArgumentException(
+                    "応募情報IDが指定されていません。");
+        }
+
+        // 応募情報の存在を確認する
+        if (!applicationRepository.existsById(userId, applicationId)) {
+            throw new IllegalArgumentException(
+                    "応募情報が見つかりません。");
+        }
+
+        // ステータス変更履歴を取得する
+        return statusHistoryRepository.findAll(userId, applicationId);
     }
 
     /**
