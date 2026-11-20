@@ -42,7 +42,7 @@ public class StatusHistoryRepository {
      * 保存先：
      * users/{userId}/applications/{applicationId}/statusHistories
      *
-     * @param userId ユーザーID
+     * @param userId        ユーザーID
      * @param applicationId 応募情報ID
      * @return 履歴コレクション
      */
@@ -57,9 +57,9 @@ public class StatusHistoryRepository {
     /**
      * ステータス変更履歴を保存する。
      *
-     * @param userId ユーザーID
+     * @param userId        ユーザーID
      * @param applicationId 応募情報ID
-     * @param history 保存する履歴
+     * @param history       保存する履歴
      * @return 発行した履歴ID
      */
     public String save(String userId, String applicationId, StatusHistory history) {
@@ -86,7 +86,7 @@ public class StatusHistoryRepository {
     /**
      * 指定された応募情報のステータス変更履歴をすべて取得する。
      *
-     * @param userId ユーザーID
+     * @param userId        ユーザーID
      * @param applicationId 応募情報ID
      * @return ステータス変更履歴一覧
      */

@@ -41,8 +41,8 @@ public class ApplicationService {
     /**
      * Repositoryを受け取るコンストラクタ
      *
-     * @param applicationRepository 応募情報Repository
-     * @param companyRepository 企業情報Repository
+     * @param applicationRepository   応募情報Repository
+     * @param companyRepository       企業情報Repository
      * @param statusHistoryRepository ステータス変更履歴Repository
      */
     public ApplicationService(
@@ -58,7 +58,7 @@ public class ApplicationService {
     /**
      * 応募情報を新規登録する
      *
-     * @param userId ログインユーザーID
+     * @param userId      ログインユーザーID
      * @param application 登録する応募情報
      * @return 登録した応募情報ID
      */
@@ -73,8 +73,7 @@ public class ApplicationService {
         application.setUpdatedAt(now);
 
         // 応募情報をFirestoreに保存する
-        String applicationId =
-                applicationRepository.save(userId, null, application);
+        String applicationId = applicationRepository.save(userId, null, application);
 
         // 初期ステータスの履歴を作成する
         StatusHistory history = new StatusHistory();
@@ -92,9 +91,9 @@ public class ApplicationService {
     /**
      * 応募情報を更新する
      *
-     * @param userId ログインユーザーID
+     * @param userId        ログインユーザーID
      * @param applicationId 応募情報ID
-     * @param application 更新する応募情報
+     * @param application   更新する応募情報
      */
     public void update(
             String userId,
@@ -108,8 +107,7 @@ public class ApplicationService {
         }
 
         // 更新対象の応募情報を取得する
-        Application existingApplication =
-                applicationRepository.findById(userId, applicationId);
+        Application existingApplication = applicationRepository.findById(userId, applicationId);
 
         if (existingApplication == null) {
             throw new IllegalArgumentException(
@@ -158,7 +156,7 @@ public class ApplicationService {
     /**
      * 応募情報をIDで1件取得する
      *
-     * @param userId ログインユーザーID
+     * @param userId        ログインユーザーID
      * @param applicationId 応募情報ID
      * @return 応募情報。存在しない場合はnull
      */
@@ -185,7 +183,7 @@ public class ApplicationService {
     /**
      * 指定企業に紐付く応募情報を取得する
      *
-     * @param userId ログインユーザーID
+     * @param userId    ログインユーザーID
      * @param companyId 企業ID
      * @return 指定企業の応募情報一覧
      */
@@ -211,7 +209,7 @@ public class ApplicationService {
     /**
      * 指定された応募情報のステータス変更履歴を取得する
      *
-     * @param userId ログインユーザーID
+     * @param userId        ログインユーザーID
      * @param applicationId 応募情報ID
      * @return ステータス変更履歴一覧
      */
@@ -238,7 +236,7 @@ public class ApplicationService {
     /**
      * 応募情報を削除する
      *
-     * @param userId ログインユーザーID
+     * @param userId        ログインユーザーID
      * @param applicationId 応募情報ID
      */
     public void delete(String userId, String applicationId) {
@@ -261,7 +259,7 @@ public class ApplicationService {
     /**
      * 応募情報の入力内容を確認・整理する
      *
-     * @param userId ログインユーザーID
+     * @param userId      ログインユーザーID
      * @param application 入力された応募情報
      */
     private void validateAndNormalize(
@@ -310,8 +308,7 @@ public class ApplicationService {
                 "INTERVIEW",
                 "ACCEPTED",
                 "REJECTED",
-                "DECLINED"
-        );
+                "DECLINED");
 
         if (!allowedStatuses.contains(application.getStatus())) {
             throw new IllegalArgumentException(

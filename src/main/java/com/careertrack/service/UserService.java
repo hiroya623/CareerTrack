@@ -45,14 +45,13 @@ public class UserService {
 
         // メールアドレスの前後の空白を除去し、小文字に統一
         String email = request.getEmail()
-            .trim()
-            .toLowerCase(Locale.ROOT);
+                .trim()
+                .toLowerCase(Locale.ROOT);
 
         // メールアドレスの重複確認
         if (userRepository.existsByEmail(email)) {
             throw new IllegalArgumentException(
-                "このメールアドレスは既に登録されています。"
-            );
+                    "このメールアドレスは既に登録されています。");
         }
 
         // ユーザー情報を作成
@@ -69,8 +68,7 @@ public class UserService {
 
         // パスワードをBCryptでハッシュ化して保存
         user.setPasswordHash(
-            passwordEncoder.encode(request.getPassword())
-        );
+                passwordEncoder.encode(request.getPassword()));
 
         // 登録日時を設定
         user.setCreatedAt(new Date());
@@ -95,8 +93,7 @@ public class UserService {
         // メールアドレスが未指定の場合はエラーとする
         if (email == null || email.isBlank()) {
             throw new IllegalArgumentException(
-                "メールアドレスが指定されていません。"
-            );
+                    "メールアドレスが指定されていません。");
         }
 
         // メールアドレスの前後の空白を除去し、小文字に統一
@@ -108,8 +105,7 @@ public class UserService {
         // 該当するユーザーが存在しない場合はエラーとする
         if (user == null) {
             throw new IllegalArgumentException(
-                "ログインユーザーが見つかりません。"
-            );
+                    "ログインユーザーが見つかりません。");
         }
 
         // ユーザーIDを返す

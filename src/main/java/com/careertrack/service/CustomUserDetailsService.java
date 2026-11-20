@@ -47,14 +47,13 @@ public class CustomUserDetailsService implements UserDetailsService {
         // 該当するユーザーが存在しない場合は認証失敗とする
         if (appUser == null) {
             throw new UsernameNotFoundException(
-                "ユーザーが見つかりません。"
-            );
+                    "ユーザーが見つかりません。");
         }
 
         // Firestoreに保存されているBCryptハッシュを返す
         return User.withUsername(appUser.getEmail())
-            .password(appUser.getPasswordHash())
-            .roles("USER")
-            .build();
+                .password(appUser.getPasswordHash())
+                .roles("USER")
+                .build();
     }
 }

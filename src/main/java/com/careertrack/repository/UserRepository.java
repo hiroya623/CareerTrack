@@ -41,20 +41,18 @@ public class UserRepository {
 
         try {
             firestore.collection(COLLECTION_NAME)
-                .document(user.getId())
-                .set(user)
-                .get();
+                    .document(user.getId())
+                    .set(user)
+                    .get();
 
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new IllegalStateException(
-                "ユーザー情報の保存が中断されました。", e
-            );
+                    "ユーザー情報の保存が中断されました。", e);
 
         } catch (ExecutionException e) {
             throw new IllegalStateException(
-                "ユーザー情報の保存に失敗しました。", e
-            );
+                    "ユーザー情報の保存に失敗しました。", e);
         }
     }
 
@@ -68,10 +66,10 @@ public class UserRepository {
 
         try {
             DocumentSnapshot snapshot = firestore
-                .collection(COLLECTION_NAME)
-                .document(userId)
-                .get()
-                .get();
+                    .collection(COLLECTION_NAME)
+                    .document(userId)
+                    .get()
+                    .get();
 
             if (!snapshot.exists()) {
                 return null;
@@ -82,13 +80,11 @@ public class UserRepository {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new IllegalStateException(
-                "ユーザー情報の取得が中断されました。", e
-            );
+                    "ユーザー情報の取得が中断されました。", e);
 
         } catch (ExecutionException e) {
             throw new IllegalStateException(
-                "ユーザー情報の取得に失敗しました。", e
-            );
+                    "ユーザー情報の取得に失敗しました。", e);
         }
     }
 
@@ -102,30 +98,28 @@ public class UserRepository {
 
         try {
             var querySnapshot = firestore
-                .collection(COLLECTION_NAME)
-                .whereEqualTo("email", email)
-                .limit(1)
-                .get()
-                .get();
+                    .collection(COLLECTION_NAME)
+                    .whereEqualTo("email", email)
+                    .limit(1)
+                    .get()
+                    .get();
 
             if (querySnapshot.isEmpty()) {
                 return null;
             }
 
             return querySnapshot.getDocuments()
-                .get(0)
-                .toObject(AppUser.class);
+                    .get(0)
+                    .toObject(AppUser.class);
 
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new IllegalStateException(
-                "メールアドレスによる検索が中断されました。", e
-            );
+                    "メールアドレスによる検索が中断されました。", e);
 
         } catch (ExecutionException e) {
             throw new IllegalStateException(
-                "メールアドレスによる検索に失敗しました。", e
-            );
+                    "メールアドレスによる検索に失敗しました。", e);
         }
     }
 

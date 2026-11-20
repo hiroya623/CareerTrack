@@ -28,7 +28,7 @@ public class SecurityConfig {
      * Firestoreから取得したユーザー情報を使って認証するProvider
      *
      * @param userDetailsService ユーザー情報取得サービス
-     * @param passwordEncoder パスワードエンコーダー
+     * @param passwordEncoder    パスワードエンコーダー
      * @return 認証Provider
      */
     @Bean
@@ -36,8 +36,7 @@ public class SecurityConfig {
             UserDetailsService userDetailsService,
             PasswordEncoder passwordEncoder) {
 
-        DaoAuthenticationProvider provider =
-            new DaoAuthenticationProvider(userDetailsService);
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
 
         provider.setPasswordEncoder(passwordEncoder);
 
@@ -47,7 +46,7 @@ public class SecurityConfig {
     /**
      * Spring Securityの認証・認可設定
      *
-     * @param http HTTPセキュリティ設定
+     * @param http                   HTTPセキュリティ設定
      * @param authenticationProvider 認証Provider
      * @return セキュリティフィルター
      * @throws Exception セキュリティ設定時の例外
@@ -59,33 +58,30 @@ public class SecurityConfig {
             throws Exception {
 
         http
-            .authenticationProvider(authenticationProvider)
+                .authenticationProvider(authenticationProvider)
 
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    "/login",
-                    "/register",
-                    "/css/**",
-                    "/js/**",
-                    "/images/**"
-                ).permitAll()
-                .anyRequest().authenticated()
-            )
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/login",
+                                "/register",
+                                "/css/**",
+                                "/js/**",
+                                "/images/**")
+                        .permitAll()
+                        .anyRequest().authenticated())
 
-            .formLogin(form -> form
-                .loginPage("/login")
-                .loginProcessingUrl("/login")
-                .usernameParameter("username")
-                .passwordParameter("password")
-                .failureUrl("/login?error")
-                .defaultSuccessUrl("/", true)
-                .permitAll()
-            )
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
+                        .usernameParameter("username")
+                        .passwordParameter("password")
+                        .failureUrl("/login?error")
+                        .defaultSuccessUrl("/", true)
+                        .permitAll())
 
-            .logout(logout -> logout
-                .logoutSuccessUrl("/login?logout")
-                .permitAll()
-            );
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/login?logout")
+                        .permitAll());
 
         return http.build();
     }

@@ -43,7 +43,7 @@ public class UserController {
 
         // 登録フォーム用のDTOを画面に渡す
         model.addAttribute("userRegistrationRequest",
-            new UserRegistrationRequest());
+                new UserRegistrationRequest());
 
         return "register";
     }
@@ -51,16 +51,15 @@ public class UserController {
     /**
      * ユーザー登録処理を実行する
      *
-     * @param request 登録フォームの入力値
-     * @param bindingResult 入力チェック結果
+     * @param request            登録フォームの入力値
+     * @param bindingResult      入力チェック結果
      * @param redirectAttributes リダイレクト先へ渡すメッセージ
-     * @param model 画面に渡すデータ
+     * @param model              画面に渡すデータ
      * @return 登録後の遷移先
      */
     @PostMapping("/register")
     public String register(
-            @Valid @ModelAttribute("userRegistrationRequest")
-            UserRegistrationRequest request,
+            @Valid @ModelAttribute("userRegistrationRequest") UserRegistrationRequest request,
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes,
             Model model) {
@@ -76,9 +75,8 @@ public class UserController {
 
             // 登録成功メッセージをログイン画面へ渡す
             redirectAttributes.addFlashAttribute(
-                "successMessage",
-                "アカウントを登録しました。ログインしてください。"
-            );
+                    "successMessage",
+                    "アカウントを登録しました。ログインしてください。");
 
             return "redirect:/login";
 

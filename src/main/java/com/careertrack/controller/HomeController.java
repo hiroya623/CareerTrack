@@ -15,7 +15,7 @@ public class HomeController {
      * ダッシュボード画面を表示する
      *
      * @param authentication ログイン中のユーザー情報
-     * @param model 画面に渡すデータ
+     * @param model          画面に渡すデータ
      * @return ダッシュボード画面
      */
     @GetMapping("/")

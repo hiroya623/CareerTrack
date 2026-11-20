@@ -56,9 +56,9 @@ public class CompanyRepository {
      * companyIdがnullまたは空の場合は新規登録としてUUIDを発行する。
      * companyIdが指定されている場合は、そのIDのドキュメントを更新する。
      *
-     * @param userId ログインユーザーID
+     * @param userId    ログインユーザーID
      * @param companyId 企業ID（新規登録の場合はnullまたは空）
-     * @param company 登録・更新する企業情報
+     * @param company   登録・更新する企業情報
      * @return 保存後の企業ID
      */
     public String save(String userId, String companyId, Company company) {
@@ -93,7 +93,7 @@ public class CompanyRepository {
     /**
      * 企業IDを指定して企業情報を1件取得する
      *
-     * @param userId ログインユーザーID
+     * @param userId    ログインユーザーID
      * @param companyId 企業ID
      * @return 企業情報。存在しない場合はnull
      */
@@ -123,7 +123,6 @@ public class CompanyRepository {
         }
     }
 
-    
     /**
      * ログインユーザーの企業情報をすべて取得する
      *
@@ -187,7 +186,7 @@ public class CompanyRepository {
     /**
      * 企業IDを指定して企業情報を削除する
      *
-     * @param userId ログインユーザーID
+     * @param userId    ログインユーザーID
      * @param companyId 企業ID
      */
     public void deleteById(String userId, String companyId) {
@@ -213,7 +212,7 @@ public class CompanyRepository {
     /**
      * 企業IDを指定して企業情報の存在を確認する
      *
-     * @param userId ログインユーザーID
+     * @param userId    ログインユーザーID
      * @param companyId 企業ID
      * @return 存在する場合はtrue
      */

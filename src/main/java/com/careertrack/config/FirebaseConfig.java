@@ -36,22 +36,19 @@ public class FirebaseConfig {
 
         if (credentialsPath == null || credentialsPath.isBlank()) {
             throw new IllegalStateException(
-                "環境変数 FIREBASE_CREDENTIALS_PATH が設定されていません。"
-            );
+                    "環境変数 FIREBASE_CREDENTIALS_PATH が設定されていません。");
         }
 
         // Firebaseアプリが初期化済みか確認
         if (FirebaseApp.getApps().isEmpty()) {
 
             // サービスアカウントJSONから認証情報を読み込む
-            try (FileInputStream serviceAccount =
-                    new FileInputStream(credentialsPath)) {
+            try (FileInputStream serviceAccount = new FileInputStream(credentialsPath)) {
 
                 FirebaseOptions options = FirebaseOptions.builder()
-                    .setCredentials(
-                        GoogleCredentials.fromStream(serviceAccount)
-                    )
-                    .build();
+                        .setCredentials(
+                                GoogleCredentials.fromStream(serviceAccount))
+                        .build();
 
                 FirebaseApp.initializeApp(options);
             }
