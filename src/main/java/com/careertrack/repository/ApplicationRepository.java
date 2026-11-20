@@ -16,7 +16,6 @@ import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QuerySnapshot;
 
-
 /**
  * 応募情報をFirestoreで管理するRepositoryクラス
  *
@@ -66,9 +65,9 @@ public class ApplicationRepository {
      * applicationIdが未指定の場合は新規登録、
      * 指定されている場合は既存データを更新する。
      *
-     * @param userId ログインユーザーID
+     * @param userId        ログインユーザーID
      * @param applicationId 応募情報ID
-     * @param application 保存する応募情報
+     * @param application   保存する応募情報
      * @return 保存した応募情報ID
      */
     public String save(
@@ -109,7 +108,7 @@ public class ApplicationRepository {
     /**
      * 応募情報をIDで1件取得する
      *
-     * @param userId ログインユーザーID
+     * @param userId        ログインユーザーID
      * @param applicationId 応募情報ID
      * @return 応募情報。存在しない場合はnull
      */
@@ -160,8 +159,7 @@ public class ApplicationRepository {
 
             for (DocumentSnapshot document : querySnapshot.getDocuments()) {
 
-                Application application =
-                        document.toObject(Application.class);
+                Application application = document.toObject(Application.class);
 
                 if (application != null) {
                     applications.add(application);
@@ -190,7 +188,7 @@ public class ApplicationRepository {
      * FirestoreのドキュメントIDも取得し、
      * 一覧画面で編集・削除に使用できるようにする。
      *
-     * @param userId ログインユーザーID
+     * @param userId    ログインユーザーID
      * @param companyId 企業ID
      * @return 指定企業の応募情報一覧
      */
@@ -210,8 +208,7 @@ public class ApplicationRepository {
             for (DocumentSnapshot document : querySnapshot.getDocuments()) {
 
                 // Firestoreの保存データをApplicationモデルに変換
-                Application application =
-                        document.toObject(Application.class);
+                Application application = document.toObject(Application.class);
 
                 if (application != null) {
 
@@ -250,7 +247,7 @@ public class ApplicationRepository {
     /**
      * 応募情報を削除する
      *
-     * @param userId ログインユーザーID
+     * @param userId        ログインユーザーID
      * @param applicationId 応募情報ID
      */
     public void deleteById(String userId, String applicationId) {
@@ -279,7 +276,7 @@ public class ApplicationRepository {
     /**
      * 応募情報が存在するか確認する
      *
-     * @param userId ログインユーザーID
+     * @param userId        ログインユーザーID
      * @param applicationId 応募情報ID
      * @return 存在する場合はtrue
      */
