@@ -601,6 +601,232 @@
                 </p>
             </section>
 
+            <!-- 面談・面接管理エリア -->
+            <section class="company-related-section">
+                <!-- セクションヘッダー -->
+                <div class="page-header">
+                    <div>
+                        <h2>面談・面接管理</h2>
+                        <p>
+                            この企業との面談・面接の日程や実施方法、接続情報などを管理できます。
+                        </p>
+                    </div>
+
+                    <!-- 面談・面接登録画面へのリンク -->
+                    <a
+                        th:href="@{/companies/{companyId}/interviews/new(companyId=${companyId})}"
+                        class="primary-button"
+                    >
+                        ＋ 面談・面接を追加
+                    </a>
+                </div>
+
+                <!-- 登録・更新・削除の成功メッセージ -->
+                <div
+                    class="success-message"
+                    th:if="${interviewSuccessMessage != null}"
+                    th:text="${interviewSuccessMessage}"
+                ></div>
+
+                <!-- 登録・更新・削除のエラーメッセージ -->
+                <div
+                    class="error-message"
+                    th:if="${interviewErrorMessage != null}"
+                    th:text="${interviewErrorMessage}"
+                ></div>
+
+                <!-- 面談・面接が存在しない場合 -->
+                <div
+                    class="empty-message"
+                    th:if="${#lists.isEmpty(interviews)}"
+                >
+                    <p>面談・面接情報はまだ登録されていません。</p>
+                    <p>「面談・面接を追加」から登録してください。</p>
+                </div>
+
+                <!-- 面談・面接一覧 -->
+                <div
+                    class="company-grid"
+                    th:unless="${#lists.isEmpty(interviews)}"
+                >
+                    <article
+                        class="company-card"
+                        th:each="interview : ${interviews}"
+                    >
+                        <!-- 面談・面接名 -->
+                        <div class="company-card-header">
+                            <h3 th:text="${interview.interviewName}">
+                                面談・面接名
+                            </h3>
+                        </div>
+
+                        <!-- 面談・面接日時 -->
+                        <div class="detail-item">
+                            <h4>日時</h4>
+
+                            <p
+                                th:if="${interview.interviewDateTime != null}"
+                                th:text="${#dates.format(
+                                    interview.interviewDateTime,
+                                    'yyyy/MM/dd HH:mm'
+                                )}"
+                            >
+                                面談・面接日時
+                            </p>
+
+                            <p th:if="${interview.interviewDateTime == null}">
+                                未設定
+                            </p>
+                        </div>
+
+                        <!-- 実施方法 -->
+                        <div class="detail-item">
+                            <h4>実施方法</h4>
+
+                            <p th:switch="${interview.interviewFormat}">
+                                <span th:case="'ONSITE'">対面</span>
+                                <span th:case="'ONLINE'">オンライン</span>
+                                <span th:case="*">未設定</span>
+                            </p>
+                        </div>
+
+                        <!-- 対面の場合の場所 -->
+                        <div
+                            class="detail-item"
+                            th:if="${interview.interviewFormat == 'ONSITE'}"
+                        >
+                            <h4>場所</h4>
+
+                            <p
+                                th:if="${interview.location != null
+                                    and !#strings.isEmpty(interview.location)}"
+                                th:text="${interview.location}"
+                            >
+                                面談・面接場所
+                            </p>
+
+                            <p
+                                th:if="${interview.location == null
+                                    or #strings.isEmpty(interview.location)}"
+                            >
+                                未登録
+                            </p>
+                        </div>
+
+                        <!-- オンラインの場合のURL -->
+                        <div
+                            class="detail-item"
+                            th:if="${interview.interviewFormat == 'ONLINE'}"
+                        >
+                            <h4>オンラインURL</h4>
+
+                            <p
+                                th:if="${interview.onlineUrl != null
+                                    and !#strings.isEmpty(interview.onlineUrl)}"
+                            >
+                                <a
+                                    th:href="${interview.onlineUrl}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    th:text="${interview.onlineUrl}"
+                                >
+                                    接続URL
+                                </a>
+                            </p>
+
+                            <p
+                                th:if="${interview.onlineUrl == null
+                                    or #strings.isEmpty(interview.onlineUrl)}"
+                            >
+                                未登録
+                            </p>
+                        </div>
+
+                        <!-- 接続情報 -->
+                        <div
+                            class="detail-item"
+                            th:if="${interview.interviewFormat == 'ONLINE'}"
+                        >
+                            <h4>接続情報</h4>
+
+                            <p
+                                class="detail-text"
+                                th:if="${interview.accessInfo != null
+                                    and !#strings.isEmpty(interview.accessInfo)}"
+                                th:text="${interview.accessInfo}"
+                            >
+                                接続情報
+                            </p>
+
+                            <p
+                                th:if="${interview.accessInfo == null
+                                    or #strings.isEmpty(interview.accessInfo)}"
+                            >
+                                未登録
+                            </p>
+                        </div>
+
+                        <!-- メモ -->
+                        <div class="detail-item">
+                            <h4>メモ</h4>
+
+                            <p
+                                class="detail-text"
+                                th:if="${interview.memo != null
+                                    and !#strings.isEmpty(interview.memo)}"
+                                th:text="${interview.memo}"
+                            >
+                                メモ
+                            </p>
+
+                            <p
+                                th:if="${interview.memo == null
+                                    or #strings.isEmpty(interview.memo)}"
+                            >
+                                未登録
+                            </p>
+                        </div>
+
+                        <!-- 編集・削除 -->
+                        <div class="header-actions">
+                            <!-- 編集画面へのリンク -->
+                            <a
+                                th:href="@{/companies/{companyId}/interviews/{interviewId}/edit(
+                                    companyId=${companyId},
+                                    interviewId=${interview.id}
+                                )}"
+                                class="primary-button"
+                            >
+                                編集
+                            </a>
+
+                            <!-- 削除フォーム -->
+                            <form
+                                th:action="@{/companies/{companyId}/interviews/{interviewId}/delete(
+                                    companyId=${companyId},
+                                    interviewId=${interview.id}
+                                )}"
+                                method="post"
+                                onsubmit="
+                                    return confirm(
+                                        'この面談・面接情報を削除してもよろしいですか？',
+                                    );
+                                "
+                            >
+                                <button type="submit" class="secondary-button">
+                                    削除
+                                </button>
+                            </form>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- 予定登録に関する説明 -->
+                <p class="form-description">
+                    ※ 面談・面接の前後1時間以内に重複する予定は登録できません。
+                </p>
+            </section>
+
             <!-- ページ下部 -->
             <footer class="page-footer">
                 <a th:href="@{/companies}"> 企業一覧へ戻る </a>

@@ -23,6 +23,8 @@ import com.careertrack.dto.ApplicationListItem;
 import com.careertrack.model.StatusHistory;
 import com.careertrack.service.DocumentService;
 import com.careertrack.model.Document;
+import com.careertrack.service.InterviewService;
+import com.careertrack.model.Interview;
 
 /**
  * 企業情報に関する画面・リクエストを管理するController
@@ -48,6 +50,10 @@ public class CompanyController {
      * 書類情報に関する業務処理
      */
     private final DocumentService documentService;
+    /**
+     * 面談・面接情報に関する業務処理
+     */
+    private final InterviewService interviewService;
 
     /**
      * コンストラクタ
@@ -55,17 +61,20 @@ public class CompanyController {
      * @param companyService     企業情報のService
      * @param applicationService 応募情報のService
      * @param documentService    書類情報のService
+     * @param interviewService   面談・面接情報のService
      * @param userService        ユーザー情報のService
      */
     public CompanyController(
             CompanyService companyService,
             ApplicationService applicationService,
             DocumentService documentService,
+            InterviewService interviewService,
             UserService userService) {
 
         this.companyService = companyService;
         this.applicationService = applicationService;
         this.documentService = documentService;
+        this.interviewService = interviewService;
         this.userService = userService;
     }
 
@@ -135,6 +144,9 @@ public class CompanyController {
         // この企業に紐付く書類情報を取得
         List<Document> documents = documentService.findAll(userId, companyId);
 
+        // この企業に紐付く面談・面接情報を取得
+        List<Interview> interviews = interviewService.findAll(userId, companyId);
+
         // 応募情報ごとのステータス変更履歴を格納する
         Map<String, List<StatusHistory>> statusHistories = new java.util.LinkedHashMap<>();
 
@@ -159,6 +171,9 @@ public class CompanyController {
 
         // 書類情報一覧を画面に渡す
         model.addAttribute("documents", documents);
+
+        // 面談・面接情報一覧を画面に渡す
+        model.addAttribute("interviews", interviews);
 
         // 応募情報ごとのステータス変更履歴を画面に渡す
         model.addAttribute("statusHistories", statusHistories);
