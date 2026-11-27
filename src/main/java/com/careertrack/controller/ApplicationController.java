@@ -84,14 +84,18 @@ public class ApplicationController {
             return "redirect:/companies";
         }
 
-        // 登録フォームに初期値を設定する
-        Application application = new Application();
-        application.setCompanyId(companyId);
-        application.setStatus("INTERESTED");
+        // エラー発生時の入力内容が存在しない場合のみ初期値を設定する
+        if (!model.containsAttribute("application")) {
+
+            Application application = new Application();
+            application.setCompanyId(companyId);
+            application.setStatus("INTERESTED");
+
+            model.addAttribute("application", application);
+        }
 
         model.addAttribute("company", company);
         model.addAttribute("companyId", companyId);
-        model.addAttribute("application", application);
         model.addAttribute("statuses", getStatuses());
 
         return "application-register";
@@ -130,9 +134,15 @@ public class ApplicationController {
 
         } catch (IllegalArgumentException e) {
 
+            // エラーメッセージを保持する
             redirectAttributes.addFlashAttribute(
                     "errorMessage",
                     e.getMessage());
+
+            // 入力された応募情報を保持する
+            redirectAttributes.addFlashAttribute(
+                    "application",
+                    application);
 
             return "redirect:/companies/" + companyId
                     + "/applications/register";
@@ -180,7 +190,11 @@ public class ApplicationController {
         model.addAttribute("company", company);
         model.addAttribute("companyId", companyId);
         model.addAttribute("applicationId", applicationId);
-        model.addAttribute("application", application);
+        // エラー発生時の入力内容が存在しない場合のみ
+        // Firestoreから取得した応募情報を設定する
+        if (!model.containsAttribute("application")) {
+            model.addAttribute("application", application);
+        }
         model.addAttribute("statuses", getStatuses());
 
         return "application-edit";
@@ -208,6 +222,20 @@ public class ApplicationController {
 
             String userId = userService.findUserIdByEmail(authentication.getName());
 
+            // 更新対象の応募情報を取得する
+            Application existingApplication = applicationService.findById(userId, applicationId);
+
+            // 応募情報が指定企業に属しているか確認する
+            if (existingApplication == null
+                    || !companyId.equals(existingApplication.getCompanyId())) {
+
+                redirectAttributes.addFlashAttribute(
+                        "errorMessage",
+                        "更新対象の応募情報が見つかりません。");
+
+                return "redirect:/companies/" + companyId;
+            }
+
             // URLの企業IDを応募情報に設定する
             application.setCompanyId(companyId);
 
@@ -224,11 +252,19 @@ public class ApplicationController {
 
         } catch (IllegalArgumentException e) {
 
+            // エラーメッセージを保持する
             redirectAttributes.addFlashAttribute(
                     "errorMessage",
                     e.getMessage());
 
-            return "redirect:/companies/" + companyId;
+            // 編集時の入力内容を保持する
+            redirectAttributes.addFlashAttribute(
+                    "application",
+                    application);
+
+            // 応募情報編集画面へ戻る
+            return "redirect:/companies/" + companyId
+                    + "/applications/" + applicationId + "/edit";
         }
     }
 

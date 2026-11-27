@@ -220,6 +220,8 @@ public class ApplicationRepository {
 
                     // 応募情報の表示項目を設定
                     item.setJobTitle(application.getJobTitle());
+                    item.setJobSiteName(application.getJobSiteName());
+                    item.setJobPostingUrl(application.getJobPostingUrl());
                     item.setStatus(application.getStatus());
                     item.setAppliedAt(application.getAppliedAt());
                     item.setMemo(application.getMemo());

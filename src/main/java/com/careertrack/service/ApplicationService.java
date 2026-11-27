@@ -4,6 +4,8 @@ package com.careertrack.service;
 import java.util.Date;
 import java.util.List;
 import java.util.Comparator;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -337,6 +339,19 @@ public class ApplicationService {
                     application.getJobTitle().trim());
         }
 
+        // 求人サイト名の前後の空白を除去する
+        // 未入力の場合はnullに統一する
+        application.setJobSiteName(
+                normalizeOptionalText(application.getJobSiteName()));
+
+        // 求人掲載URLの前後の空白を除去する
+        // 未入力の場合はnullに統一する
+        application.setJobPostingUrl(
+                normalizeOptionalText(application.getJobPostingUrl()));
+
+        // 求人掲載URLの形式を確認する
+        validateJobPostingUrl(application.getJobPostingUrl());
+
         // 応募・選考状況が入力されていることを確認する
         if (!StringUtils.hasText(application.getStatus())) {
             throw new IllegalArgumentException(
@@ -362,6 +377,76 @@ public class ApplicationService {
         // メモが入力されている場合は前後の空白を除去する
         if (application.getMemo() != null) {
             application.setMemo(application.getMemo().trim());
+        }
+    }
+
+    /**
+     * 任意入力項目の文字列を整理する
+     *
+     * 前後の空白を除去し、
+     * 未入力または空白のみの場合はnullを返す。
+     *
+     * @param value 入力された文字列
+     * @return 整理後の文字列
+     */
+    private String normalizeOptionalText(String value) {
+
+        if (!StringUtils.hasText(value)) {
+            return null;
+        }
+
+        return value.strip();
+    }
+
+    /**
+     * 求人掲載URLの形式を確認する
+     *
+     * 未入力の場合は許可する。
+     * 入力されている場合はHTTP・HTTPS形式のみ許可する。
+     *
+     * @param jobPostingUrl 求人掲載URL
+     */
+    private void validateJobPostingUrl(String jobPostingUrl) {
+
+        // 任意項目のため、未入力の場合は検証しない
+        if (jobPostingUrl == null) {
+            return;
+        }
+
+        try {
+
+            // 入力された文字列をURIに変換する
+            URI uri = new URI(jobPostingUrl);
+
+            // URLのスキームを取得する
+            String scheme = uri.getScheme();
+
+            // HTTP・HTTPS以外のURLは許可しない
+            if (!"http".equalsIgnoreCase(scheme)
+                    && !"https".equalsIgnoreCase(scheme)) {
+
+                throw new IllegalArgumentException(
+                        "求人掲載URLはhttp://またはhttps://から始まるURLを入力してください。");
+            }
+
+            // ホスト名が存在することを確認する
+            if (!StringUtils.hasText(uri.getHost())) {
+
+                throw new IllegalArgumentException(
+                        "正しい求人掲載URLを入力してください。");
+            }
+
+            // ユーザー認証情報を含むURLは許可しない
+            if (uri.getUserInfo() != null) {
+
+                throw new IllegalArgumentException(
+                        "認証情報を含む求人掲載URLは登録できません。");
+            }
+
+        } catch (URISyntaxException e) {
+
+            throw new IllegalArgumentException(
+                    "正しい求人掲載URLを入力してください。");
         }
     }
 }

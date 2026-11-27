@@ -285,6 +285,47 @@
                                     </p>
                                 </div>
 
+                                <!-- 求人サイト名 -->
+                                <div class="detail-item">
+                                    <h4>求人サイト名</h4>
+
+                                    <p
+                                        th:if="${!#strings.isEmpty(applicationItem.jobSiteName)}"
+                                        th:text="${applicationItem.jobSiteName}"
+                                    >
+                                        求人サイト名
+                                    </p>
+
+                                    <p
+                                        th:if="${#strings.isEmpty(applicationItem.jobSiteName)}"
+                                    >
+                                        未設定
+                                    </p>
+                                </div>
+
+                                <!-- 求人掲載URL -->
+                                <div class="detail-item">
+                                    <h4>求人掲載URL</h4>
+
+                                    <p
+                                        th:if="${!#strings.isEmpty(applicationItem.jobPostingUrl)}"
+                                    >
+                                        <a
+                                            th:href="${applicationItem.jobPostingUrl}"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            求人ページを開く
+                                        </a>
+                                    </p>
+
+                                    <p
+                                        th:if="${#strings.isEmpty(applicationItem.jobPostingUrl)}"
+                                    >
+                                        未設定
+                                    </p>
+                                </div>
+
                                 <!-- 応募日 -->
                                 <div class="detail-item">
                                     <h4>応募日</h4>

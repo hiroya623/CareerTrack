@@ -34,11 +34,23 @@ public class Application {
     private String jobTitle;
 
     /**
-     * 利用した求人サイトのID
+     * 利用した求人サイト名
      *
-     * 将来実装する求人サイト管理機能と関連付ける。
+     * 例：
+     * Green
+     * doda
+     * リクナビNEXT
+     * 企業公式サイト
      */
-    private String jobSiteId;
+    private String jobSiteName;
+
+    /**
+     * 応募した求人情報の掲載ページURL
+     *
+     * 求人サイトのトップページではなく、
+     * 求人ごとの掲載ページURLを保存する。
+     */
+    private String jobPostingUrl;
 
     /**
      * 応募・選考状況
@@ -102,13 +114,22 @@ public class Application {
         this.jobTitle = jobTitle;
     }
 
-    // jobSiteIdの取得・設定
-    public String getJobSiteId() {
-        return jobSiteId;
+    // jobSiteNameの取得・設定
+    public String getJobSiteName() {
+        return jobSiteName;
     }
 
-    public void setJobSiteId(String jobSiteId) {
-        this.jobSiteId = jobSiteId;
+    public void setJobSiteName(String jobSiteName) {
+        this.jobSiteName = jobSiteName;
+    }
+
+    // jobPostingUrlの取得・設定
+    public String getJobPostingUrl() {
+        return jobPostingUrl;
+    }
+
+    public void setJobPostingUrl(String jobPostingUrl) {
+        this.jobPostingUrl = jobPostingUrl;
     }
 
     // statusの取得・設定

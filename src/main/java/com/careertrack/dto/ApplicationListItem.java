@@ -24,6 +24,16 @@ public class ApplicationListItem {
     private String jobTitle;
 
     /**
+     * 利用した求人サイト名
+     */
+    private String jobSiteName;
+
+    /**
+     * 応募した求人情報の掲載ページURL
+     */
+    private String jobPostingUrl;
+
+    /**
      * 応募・選考状況
      */
     private String status;
@@ -60,6 +70,24 @@ public class ApplicationListItem {
 
     public void setJobTitle(String jobTitle) {
         this.jobTitle = jobTitle;
+    }
+
+    // jobSiteNameの取得・設定
+    public String getJobSiteName() {
+        return jobSiteName;
+    }
+
+    public void setJobSiteName(String jobSiteName) {
+        this.jobSiteName = jobSiteName;
+    }
+
+    // jobPostingUrlの取得・設定
+    public String getJobPostingUrl() {
+        return jobPostingUrl;
+    }
+
+    public void setJobPostingUrl(String jobPostingUrl) {
+        this.jobPostingUrl = jobPostingUrl;
     }
 
     // statusの取得・設定

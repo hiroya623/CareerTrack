@@ -57,6 +57,32 @@
                         />
                     </div>
 
+                    <!-- 求人サイト名 -->
+                    <div class="form-group">
+                        <label for="jobSiteName">求人サイト名（任意）</label>
+                        <input
+                            type="text"
+                            id="jobSiteName"
+                            th:field="*{jobSiteName}"
+                            maxlength="100"
+                            placeholder="例：Green、doda、リクナビNEXT"
+                        />
+                    </div>
+
+                    <!-- 求人掲載URL -->
+                    <div class="form-group">
+                        <label for="jobPostingUrl">求人掲載URL（任意）</label>
+                        <input
+                            type="text"
+                            id="jobPostingUrl"
+                            th:field="*{jobPostingUrl}"
+                            placeholder="https://example.com/jobs/12345"
+                        />
+                        <p class="form-description">
+                            応募した求人情報の掲載ページURLを入力してください。
+                        </p>
+                    </div>
+
                     <div class="form-group">
                         <label for="status">応募・選考状況</label>
                         <select id="status" th:field="*{status}" required>
