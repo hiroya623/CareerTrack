@@ -1,61 +1,395 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <title>ダッシュボード | CareerTrack</title>
+        <title>ホーム | CareerTrack</title>
 
         <link rel="stylesheet" th:href="@{/css/style.css}" />
     </head>
 
     <body>
-        <main class="auth-container">
-            <section class="auth-card">
-                <!-- アプリケーション名 -->
-                <h1>CareerTrack</h1>
+        <!-- ヘッダー -->
+        <header class="header">
+            <div class="header-logo">CareerTrack</div>
 
-                <p class="auth-description">転職活動管理システム</p>
+            <div class="header-user">
+                <span th:text="${loginEmail}"></span>
 
-                <hr />
-
-                <!-- ダッシュボード -->
-                <h2>ダッシュボード</h2>
-
-                <p>ログインに成功しました。</p>
-
-                <!-- ログインユーザー情報 -->
-                <p>ログイン中のアカウント：</p>
-
-                <p>
-                    <strong th:text="${loginEmail}"></strong>
-                </p>
-
-                <!-- 企業管理メニュー -->
-                <div class="dashboard-actions">
-                    <a th:href="@{/companies}" class="dashboard-action">
-                        <strong>企業一覧</strong>
-
-                        <span> 登録した企業情報を確認する </span>
-                    </a>
-
-                    <a
-                        th:href="@{/companies/register}"
-                        class="dashboard-action"
-                    >
-                        <strong>企業を登録</strong>
-
-                        <span> 新しい企業情報を登録する </span>
-                    </a>
-                </div>
-
-                <!-- ログアウト -->
                 <form th:action="@{/logout}" method="post">
-                    <button type="submit" class="auth-button">
+                    <button type="submit" class="secondary-button">
                         ログアウト
                     </button>
                 </form>
-            </section>
-        </main>
+            </div>
+        </header>
+
+        <!-- 画面全体 -->
+        <div class="app-container">
+            <!-- サイドメニュー -->
+            <aside class="sidebar">
+                <nav>
+                    <ul class="sidebar-menu">
+                        <li>
+                            <a th:href="@{/}" class="active">ホーム</a>
+                        </li>
+
+                        <li>
+                            <a th:href="@{/companies}">企業一覧</a>
+                        </li>
+
+                        <li>
+                            <a th:href="@{/calendar}">カレンダー</a>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <!-- メインコンテンツ -->
+            <main class="main-content">
+                <div class="task-page">
+                    <!-- ページヘッダー -->
+                    <header class="page-header">
+                        <div>
+                            <h1>ホーム</h1>
+
+                            <p>
+                                各企業の選考状況や対応事項をまとめて確認できます。
+                            </p>
+                        </div>
+                    </header>
+
+                    <!-- 分類ごとの件数 -->
+                    <section class="task-summary">
+                        <!-- 応募・選考 -->
+                        <a
+                            th:href="@{/(type='APPLICATION')}"
+                            class="task-summary-card summary-application"
+                            th:classappend="${selectedType == 'APPLICATION'} ? ' active' : ''"
+                        >
+                            <span class="task-summary-label"> 応募・選考 </span>
+
+                            <div class="task-summary-count">
+                                <strong th:text="${applicationCount}">
+                                    0
+                                </strong>
+                                <span>件</span>
+                            </div>
+                        </a>
+
+                        <!-- 提出書類 -->
+                        <a
+                            th:href="@{/(type='DOCUMENT')}"
+                            class="task-summary-card summary-document"
+                            th:classappend="${selectedType == 'DOCUMENT'} ? ' active' : ''"
+                        >
+                            <span class="task-summary-label"> 提出書類 </span>
+
+                            <div class="task-summary-count">
+                                <strong th:text="${documentCount}"> 0 </strong>
+                                <span>件</span>
+                            </div>
+                        </a>
+
+                        <!-- 面談・面接 -->
+                        <a
+                            th:href="@{/(type='INTERVIEW')}"
+                            class="task-summary-card summary-interview"
+                            th:classappend="${selectedType == 'INTERVIEW'} ? ' active' : ''"
+                        >
+                            <span class="task-summary-label"> 面談・面接 </span>
+
+                            <div class="task-summary-count">
+                                <strong th:text="${interviewCount}"> 0 </strong>
+                                <span>件</span>
+                            </div>
+                        </a>
+                    </section>
+
+                    <!-- 提出期限超過の警告 -->
+                    <div
+                        th:if="${overdueCount > 0}"
+                        class="task-overdue-notice"
+                    >
+                        提出期限を超過している書類が
+                        <strong th:text="${overdueCount}">0</strong>
+                        件あります。
+                    </div>
+
+                    <!-- タスク一覧 -->
+                    <section class="task-list-section">
+                        <!-- 分類による絞り込み -->
+                        <nav class="task-filter">
+                            <a
+                                th:href="@{/}"
+                                class="task-filter-button"
+                                th:classappend="${selectedType == 'ALL'} ? ' active' : ''"
+                            >
+                                すべて
+                                <span th:text="|(${totalCount})|"></span>
+                            </a>
+
+                            <a
+                                th:href="@{/(type='APPLICATION')}"
+                                class="task-filter-button"
+                                th:classappend="${selectedType == 'APPLICATION'} ? ' active' : ''"
+                            >
+                                応募・選考
+                                <span th:text="|(${applicationCount})|"></span>
+                            </a>
+
+                            <a
+                                th:href="@{/(type='DOCUMENT')}"
+                                class="task-filter-button"
+                                th:classappend="${selectedType == 'DOCUMENT'} ? ' active' : ''"
+                            >
+                                提出書類
+                                <span th:text="|(${documentCount})|"></span>
+                            </a>
+
+                            <a
+                                th:href="@{/(type='INTERVIEW')}"
+                                class="task-filter-button"
+                                th:classappend="${selectedType == 'INTERVIEW'} ? ' active' : ''"
+                            >
+                                面談・面接
+                                <span th:text="|(${interviewCount})|"></span>
+                            </a>
+                        </nav>
+
+                        <!-- 表示件数 -->
+                        <p class="task-result-count">
+                            <strong th:text="${#lists.size(tasks)}"> 0 </strong>
+                            件のタスク
+                        </p>
+
+                        <!-- タスクが存在する場合 -->
+                        <div
+                            th:if="${!#lists.isEmpty(tasks)}"
+                            class="task-list"
+                        >
+                            <article
+                                th:each="task : ${tasks}"
+                                class="task-card"
+                                th:classappend="|task-card-${#strings.toLowerCase(task.taskType)}|"
+                            >
+                                <!-- タスク基本情報 -->
+                                <div class="task-information">
+                                    <!-- タスク分類 -->
+                                    <div class="task-category">
+                                        <span
+                                            th:if="${task.taskType == 'APPLICATION'}"
+                                            class="task-type type-application"
+                                        >
+                                            応募・選考
+                                        </span>
+
+                                        <span
+                                            th:if="${task.taskType == 'DOCUMENT'}"
+                                            class="task-type type-document"
+                                        >
+                                            提出書類
+                                        </span>
+
+                                        <span
+                                            th:if="${task.taskType == 'INTERVIEW'}"
+                                            class="task-type type-interview"
+                                        >
+                                            面談・面接
+                                        </span>
+                                    </div>
+
+                                    <!-- タスク名 -->
+                                    <h2
+                                        class="task-name"
+                                        th:text="${task.title}"
+                                    >
+                                        タスク名
+                                    </h2>
+
+                                    <!-- 関連企業 -->
+                                    <div class="task-company">
+                                        <a
+                                            th:href="@{/companies/{companyId}(companyId=${task.companyId})}"
+                                            th:text="${task.companyName}"
+                                        >
+                                            企業名
+                                        </a>
+                                    </div>
+
+                                    <!-- 日付情報 -->
+                                    <div class="task-dates">
+                                        <!-- 書類の提出予定日 -->
+                                        <span
+                                            th:if="${task.taskType == 'DOCUMENT' and task.plannedDate != null}"
+                                            th:classappend="${task.plannedDateOverdue} ? ' task-planned-overdue' : ''"
+                                        >
+                                            提出予定日：
+                                            <span
+                                                th:text="${#dates.format(task.plannedDate, 'yyyy/MM/dd')}"
+                                            ></span>
+                                        </span>
+
+                                        <!-- 書類の提出期限日 -->
+                                        <span
+                                            th:if="${task.taskType == 'DOCUMENT' and task.deadlineDate != null}"
+                                            th:classappend="${task.deadlineOverdue} ? ' task-overdue' : ''"
+                                        >
+                                            提出期限日：
+                                            <span
+                                                th:text="${#dates.format(task.deadlineDate, 'yyyy/MM/dd')}"
+                                            ></span>
+                                        </span>
+
+                                        <!-- 面談・面接の予定日時 -->
+                                        <span
+                                            th:if="${task.taskType == 'INTERVIEW' and task.plannedDate != null}"
+                                        >
+                                            実施日時：
+                                            <span
+                                                th:text="${#dates.format(task.plannedDate, 'yyyy/MM/dd HH:mm')}"
+                                            ></span>
+                                        </span>
+
+                                        <!-- 日付未設定 -->
+                                        <span
+                                            th:if="${task.plannedDate == null and task.deadlineDate == null}"
+                                            class="task-no-date"
+                                        >
+                                            日付未設定
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- 状況・警告ラベル -->
+                                <div class="task-labels">
+                                    <!-- 応募・選考状況 -->
+                                    <div
+                                        th:if="${task.taskType == 'APPLICATION'}"
+                                        th:switch="${task.status}"
+                                    >
+                                        <span
+                                            th:case="'INTERESTED'"
+                                            class="task-status status-application"
+                                        >
+                                            気になる企業
+                                        </span>
+
+                                        <span
+                                            th:case="'SCOUT'"
+                                            class="task-status status-application"
+                                        >
+                                            スカウト
+                                        </span>
+
+                                        <span
+                                            th:case="'CASUAL_INTERVIEW'"
+                                            class="task-status status-application"
+                                        >
+                                            カジュアル面談
+                                        </span>
+
+                                        <span
+                                            th:case="'DOCUMENTS'"
+                                            class="task-status status-application"
+                                        >
+                                            書類選考
+                                        </span>
+
+                                        <span
+                                            th:case="'INTERVIEW'"
+                                            class="task-status status-application"
+                                        >
+                                            面接
+                                        </span>
+                                    </div>
+
+                                    <!-- 書類の提出状況 -->
+                                    <span
+                                        th:if="${task.taskType == 'DOCUMENT'}"
+                                        class="task-status status-document"
+                                    >
+                                        未提出
+                                    </span>
+
+                                    <!-- 面談・面接の実施形式 -->
+                                    <span
+                                        th:if="${task.taskType == 'INTERVIEW' and task.status == 'ONLINE'}"
+                                        class="task-status status-interview"
+                                    >
+                                        オンライン
+                                    </span>
+
+                                    <span
+                                        th:if="${task.taskType == 'INTERVIEW' and task.status == 'ONSITE'}"
+                                        class="task-status status-interview"
+                                    >
+                                        対面
+                                    </span>
+
+                                    <!-- 提出期限超過 -->
+                                    <span
+                                        th:if="${task.deadlineOverdue}"
+                                        class="task-overdue-label"
+                                    >
+                                        期限超過
+                                    </span>
+
+                                    <!-- 提出予定日超過 -->
+                                    <span
+                                        th:if="${task.plannedDateOverdue}"
+                                        class="task-planned-overdue-label"
+                                    >
+                                        予定日超過
+                                    </span>
+                                </div>
+
+                                <!-- 企業詳細へのリンク -->
+                                <div class="task-actions">
+                                    <a
+                                        th:href="@{/companies/{companyId}(companyId=${task.companyId})}"
+                                        class="secondary-button"
+                                    >
+                                        企業詳細へ
+                                    </a>
+                                </div>
+                            </article>
+                        </div>
+
+                        <!-- タスクが存在しない場合 -->
+                        <div
+                            th:if="${#lists.isEmpty(tasks)}"
+                            class="empty-message"
+                        >
+                            <h2
+                                th:text="${selectedType == 'ALL'} ? '現在表示するタスクはありません' : '該当するタスクがありません'"
+                            ></h2>
+
+                            <p
+                                th:text="${selectedType == 'ALL'} ? '企業詳細画面に登録した選考情報や対応事項がここに表示されます。' : '別の分類を選択してください。'"
+                            ></p>
+
+                            <a
+                                th:if="${selectedType == 'ALL'}"
+                                th:href="@{/companies}"
+                                class="primary-button"
+                            >
+                                企業一覧へ
+                            </a>
+
+                            <a
+                                th:if="${selectedType != 'ALL'}"
+                                th:href="@{/}"
+                                class="secondary-button"
+                            >
+                                すべてのタスクを表示
+                            </a>
+                        </div>
+                    </section>
+                </div>
+            </main>
+        </div>
     </body>
 </html>
+
