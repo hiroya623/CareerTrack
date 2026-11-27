@@ -10,41 +10,13 @@
     </head>
 
     <body>
-        <!-- ヘッダー -->
-        <header class="header">
-            <div class="header-logo">CareerTrack</div>
-
-            <div class="header-user">
-                <span th:text="${loginEmail}"></span>
-
-                <form th:action="@{/logout}" method="post">
-                    <button type="submit" class="secondary-button">
-                        ログアウト
-                    </button>
-                </form>
-            </div>
-        </header>
+        <!-- 共通ヘッダー -->
+        <header th:replace="~{fragments/layout :: header}"></header>
 
         <!-- 画面全体 -->
         <div class="app-container">
-            <!-- サイドメニュー -->
-            <aside class="sidebar">
-                <nav>
-                    <ul class="sidebar-menu">
-                        <li>
-                            <a th:href="@{/}" class="active">ホーム</a>
-                        </li>
-
-                        <li>
-                            <a th:href="@{/companies}">企業一覧</a>
-                        </li>
-
-                        <li>
-                            <a th:href="@{/calendar}">カレンダー</a>
-                        </li>
-                    </ul>
-                </nav>
-            </aside>
+            <!-- 共通サイドメニュー -->
+            <aside th:replace="~{fragments/layout :: sidebar('home')}"></aside>
 
             <!-- メインコンテンツ -->
             <main class="main-content">
@@ -392,4 +364,3 @@
         </div>
     </body>
 </html>
-

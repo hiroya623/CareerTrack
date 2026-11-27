@@ -2,6 +2,9 @@ package com.careertrack.service;
 
 import java.util.Date;
 import java.util.List;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Comparator;
 
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -82,13 +85,106 @@ public class InterviewService {
     /**
      * 指定した企業の面談・面接情報をすべて取得する。
      *
+     * 本日、今後、過去の予定の順に並び替える。
+     * 本日と今後の予定は日時の昇順、
+     * 過去の予定は日時の降順で表示する。
+     *
      * @param userId    ユーザーID
      * @param companyId 企業ID
-     * @return 面談・面接情報一覧
+     * @return 並び替え済みの面談・面接情報一覧
      */
     public List<Interview> findAll(String userId, String companyId) {
 
-        return interviewRepository.findAll(userId, companyId);
+        // 指定企業の面談・面接情報を取得する
+        List<Interview> interviews = interviewRepository.findAll(userId, companyId);
+
+        // 本日の日付を取得する
+        LocalDate today = LocalDate.now();
+
+        // 表示優先順位と面談・面接日時で並び替える
+        return interviews.stream()
+                .sorted(
+                        Comparator
+                                .comparingInt(
+                                        (Interview interview) -> getInterviewPriority(interview, today))
+                                .thenComparing(
+                                        interview -> getUpcomingSortDate(interview, today),
+                                        Comparator.nullsLast(
+                                                Comparator.naturalOrder()))
+                                .thenComparing(
+                                        Interview::getInterviewDateTime,
+                                        Comparator.nullsLast(
+                                                Comparator.reverseOrder())))
+                .toList();
+    }
+
+    /**
+     * 面談・面接情報の表示優先順位を取得する。
+     *
+     * 1：本日の予定
+     * 2：明日以降の予定
+     * 3：過去の予定
+     * 4：日時未設定
+     *
+     * @param interview 面談・面接情報
+     * @param today     本日の日付
+     * @return 表示優先順位
+     */
+    private int getInterviewPriority(
+            Interview interview,
+            LocalDate today) {
+
+        // 面談・面接日時を取得する
+        Date interviewDateTime = interview.getInterviewDateTime();
+
+        // 日時が未設定の場合は最後に表示する
+        if (interviewDateTime == null) {
+            return 4;
+        }
+
+        // 日時から年月日を取得する
+        LocalDate interviewDate = interviewDateTime.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+
+        // 本日の予定
+        if (interviewDate.equals(today)) {
+            return 1;
+        }
+
+        // 明日以降の予定
+        if (interviewDate.isAfter(today)) {
+            return 2;
+        }
+
+        // 過去の予定
+        return 3;
+    }
+
+    /**
+     * 本日および今後の予定の並び替えに使用する日時を取得する。
+     *
+     * 過去の予定は日時の降順で並び替えるため、
+     * このメソッドではnullを返す。
+     *
+     * @param interview 面談・面接情報
+     * @param today     本日の日付
+     * @return 並び替えに使用する日時
+     */
+    private Date getUpcomingSortDate(
+            Interview interview,
+            LocalDate today) {
+
+        // 表示優先順位を取得する
+        int priority = getInterviewPriority(interview, today);
+
+        // 本日または明日以降の予定の場合
+        if (priority == 1 || priority == 2) {
+            return interview.getInterviewDateTime();
+        }
+
+        // 過去の予定または日時未設定の場合
+        return null;
     }
 
     /**

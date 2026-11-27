@@ -3,6 +3,7 @@ package com.careertrack.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Comparator;
 
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -13,7 +14,6 @@ import com.careertrack.repository.CompanyRepository;
 import com.careertrack.dto.ApplicationListItem;
 import com.careertrack.model.StatusHistory;
 import com.careertrack.repository.StatusHistoryRepository;
-import com.careertrack.model.StatusHistory;
 
 /**
  * 応募情報に関する業務処理を管理するServiceクラス
@@ -183,9 +183,12 @@ public class ApplicationService {
     /**
      * 指定企業に紐付く応募情報を取得する
      *
+     * 選考状況の優先順位で並び替え、
+     * 同じ選考状況の場合は応募日の新しい順に表示する。
+     *
      * @param userId    ログインユーザーID
      * @param companyId 企業ID
-     * @return 指定企業の応募情報一覧
+     * @return 並び替え済みの応募情報一覧
      */
     public List<ApplicationListItem> findByCompanyId(
             String userId,
@@ -203,7 +206,48 @@ public class ApplicationService {
                     "指定された企業情報が見つかりません。");
         }
 
-        return applicationRepository.findByCompanyId(userId, companyId);
+        // 指定企業の応募情報を取得する
+        List<ApplicationListItem> applications = applicationRepository.findByCompanyId(userId, companyId);
+
+        // 選考状況の優先順位と応募日で並び替える
+        return applications.stream()
+                .sorted(
+                        Comparator
+                                .comparingInt(
+                                        (ApplicationListItem application) -> getStatusPriority(application.getStatus()))
+                                .thenComparing(
+                                        ApplicationListItem::getAppliedAt,
+                                        Comparator.nullsLast(
+                                                Comparator.reverseOrder())))
+                .toList();
+    }
+
+    /**
+     * 応募・選考状況の表示優先順位を取得する
+     *
+     * 数値が小さいほど優先的に表示する。
+     *
+     * @param status 応募・選考状況
+     * @return 表示優先順位
+     */
+    private int getStatusPriority(String status) {
+
+        // ステータスが未設定の場合は最後に表示する
+        if (status == null) {
+            return 99;
+        }
+
+        return switch (status) {
+            case "INTERVIEW" -> 1;
+            case "DOCUMENTS" -> 2;
+            case "CASUAL_INTERVIEW" -> 3;
+            case "SCOUT" -> 4;
+            case "INTERESTED" -> 5;
+            case "ACCEPTED" -> 6;
+            case "REJECTED" -> 7;
+            case "DECLINED" -> 8;
+            default -> 99;
+        };
     }
 
     /**

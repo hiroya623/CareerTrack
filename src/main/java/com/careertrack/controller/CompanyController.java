@@ -90,15 +90,20 @@ public class CompanyController {
             Authentication authentication,
             Model model) {
 
-        // ログイン中のメールアドレスからユーザーIDを取得
-        String userId = userService.findUserIdByEmail(
-                authentication.getName());
+        // ログイン中のメールアドレスを取得
+        String loginEmail = authentication.getName();
+
+        // メールアドレスからユーザーIDを取得
+        String userId = userService.findUserIdByEmail(loginEmail);
 
         // ログインユーザー本人の企業情報を取得
         List<CompanyListItem> companies = companyService.findAll(userId);
 
         // 企業一覧を画面に渡す
         model.addAttribute("companies", companies);
+
+        // 共通ヘッダーに表示するメールアドレスを画面に渡す
+        model.addAttribute("loginEmail", loginEmail);
 
         return "company-list";
     }
@@ -119,9 +124,14 @@ public class CompanyController {
             Model model,
             RedirectAttributes redirectAttributes) {
 
-        // ログイン中のメールアドレスからユーザーIDを取得
-        String userId = userService.findUserIdByEmail(
-                authentication.getName());
+        // ログイン中のメールアドレスを取得
+        String loginEmail = authentication.getName();
+
+        // メールアドレスからユーザーIDを取得
+        String userId = userService.findUserIdByEmail(loginEmail);
+
+        // 共通ヘッダーに表示するメールアドレスを画面に渡す
+        model.addAttribute("loginEmail", loginEmail);
 
         // ログインユーザー本人の企業情報を取得
         Company company = companyService.findById(
