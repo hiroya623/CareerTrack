@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.ui.Model;
 
 import com.careertrack.model.Interview;
 import com.careertrack.service.InterviewService;
@@ -77,6 +76,7 @@ public class InterviewController {
      * @param interview      登録する面談・面接情報
      * @param authentication ログイン情報
      * @param model          画面表示用データ
+     * @param redirectAttributes リダイレクト時のメッセージ
      * @return 登録画面または企業詳細画面
      */
     @PostMapping("/register")
@@ -84,7 +84,8 @@ public class InterviewController {
             @PathVariable String companyId,
             @ModelAttribute Interview interview,
             Authentication authentication,
-            Model model) {
+            Model model,
+            RedirectAttributes redirectAttributes) {
 
         try {
             // ログインユーザーIDを取得
@@ -93,6 +94,11 @@ public class InterviewController {
 
             // 面談・面接情報を登録
             interviewService.save(userId, companyId, interview);
+
+            // 登録成功メッセージを設定
+            redirectAttributes.addFlashAttribute(
+                    "interviewSuccessMessage",
+                    "面談・面接情報を登録しました。");
 
         } catch (IllegalArgumentException e) {
 
@@ -150,6 +156,7 @@ public class InterviewController {
      * @param interview      更新する面談・面接情報
      * @param authentication ログイン情報
      * @param model          画面表示用データ
+     * @param redirectAttributes リダイレクト時のメッセージ
      * @return 編集画面または企業詳細画面
      */
     @PostMapping("/{interviewId}/update")
@@ -158,7 +165,8 @@ public class InterviewController {
             @PathVariable String interviewId,
             @ModelAttribute Interview interview,
             Authentication authentication,
-            Model model) {
+            Model model,
+            RedirectAttributes redirectAttributes) {
 
         try {
             // ログインユーザーIDを取得
@@ -170,6 +178,11 @@ public class InterviewController {
 
             // 面談・面接情報を更新
             interviewService.update(userId, companyId, interview);
+
+            // 更新成功メッセージを設定
+            redirectAttributes.addFlashAttribute(
+                    "interviewSuccessMessage",
+                    "面談・面接情報を更新しました。");
 
         } catch (IllegalArgumentException e) {
 

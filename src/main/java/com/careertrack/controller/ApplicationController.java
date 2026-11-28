@@ -127,8 +127,8 @@ public class ApplicationController {
             applicationService.register(userId, application);
 
             redirectAttributes.addFlashAttribute(
-                    "successMessage",
-                    "応募情報を登録しました。");
+                "applicationSuccessMessage",
+                "応募情報を登録しました。");
 
             return "redirect:/companies/" + companyId;
 
@@ -230,8 +230,8 @@ public class ApplicationController {
                     || !companyId.equals(existingApplication.getCompanyId())) {
 
                 redirectAttributes.addFlashAttribute(
-                        "errorMessage",
-                        "更新対象の応募情報が見つかりません。");
+                    "applicationErrorMessage",
+                    "更新対象の応募情報が見つかりません。");
 
                 return "redirect:/companies/" + companyId;
             }
@@ -245,8 +245,8 @@ public class ApplicationController {
                     application);
 
             redirectAttributes.addFlashAttribute(
-                    "successMessage",
-                    "応募情報を更新しました。");
+                "applicationSuccessMessage",
+                "応募情報を更新しました。");
 
             return "redirect:/companies/" + companyId;
 
@@ -301,13 +301,13 @@ public class ApplicationController {
             applicationService.delete(userId, applicationId);
 
             redirectAttributes.addFlashAttribute(
-                    "successMessage",
+                    "applicationSuccessMessage",
                     "応募情報を削除しました。");
 
         } catch (IllegalArgumentException e) {
 
             redirectAttributes.addFlashAttribute(
-                    "errorMessage",
+                    "applicationErrorMessage",
                     e.getMessage());
         }
 

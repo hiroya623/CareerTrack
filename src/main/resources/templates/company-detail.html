@@ -73,6 +73,13 @@
                             </div>
                         </div>
 
+                        <!-- 企業情報の更新成功メッセージ -->
+                        <div
+                            class="success-message"
+                            th:if="${companySuccessMessage != null}"
+                            th:text="${companySuccessMessage}"
+                        ></div>
+
                         <!-- 基本情報 -->
                         <div class="company-detail-body">
                             <div class="detail-item">
@@ -212,18 +219,18 @@
                             </a>
                         </div>
 
-                        <!-- 登録成功メッセージ -->
+                        <!-- 応募情報の登録・更新・削除の成功メッセージ -->
                         <div
                             class="success-message"
-                            th:if="${successMessage != null}"
-                            th:text="${successMessage}"
+                            th:if="${applicationSuccessMessage != null}"
+                            th:text="${applicationSuccessMessage}"
                         ></div>
 
-                        <!-- エラーメッセージ -->
+                        <!-- 応募情報の登録・更新・削除のエラーメッセージ -->
                         <div
                             class="error-message"
-                            th:if="${errorMessage != null}"
-                            th:text="${errorMessage}"
+                            th:if="${applicationErrorMessage != null}"
+                            th:text="${applicationErrorMessage}"
                         ></div>
 
                         <!-- 応募情報が存在しない場合 -->

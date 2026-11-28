@@ -265,10 +265,10 @@ public class CompanyController {
                     companyId,
                     company);
 
-            // 更新成功メッセージを設定
+            // 企業情報専用の更新成功メッセージを設定
             redirectAttributes.addFlashAttribute(
-                    "successMessage",
-                    "企業情報を更新しました。");
+                "companySuccessMessage",
+                "企業情報を更新しました。");
 
             // 企業詳細画面へ移動
             return "redirect:/companies/" + companyId;

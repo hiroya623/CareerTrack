@@ -183,17 +183,6 @@ body {
     text-decoration: none;
 }
 
-.error-message {
-    margin: 6px 0;
-    color: #b91c1c;
-    font-size: 13px;
-    margin-bottom: 20px;
-    padding: 12px 16px;
-    background-color: #fef2f2;
-    border: 1px solid #fecaca;
-    border-radius: 6px;
-}
-
 /* ========================================
    企業管理画面共通
 ======================================== */
@@ -267,22 +256,27 @@ body {
     background-color: #f1f5f9;
 }
 
-/* 成功・エラーメッセージ */
+/* 成功・エラーメッセージ共通 */
 .success-message,
-.page-container .error-message {
-    margin-bottom: 20px;
+.error-message {
+    box-sizing: border-box;
+    margin: 0 0 20px;
     padding: 12px 16px;
     border-radius: 8px;
     font-size: 14px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
 }
 
+/* 成功メッセージ */
 .success-message {
     color: #166534;
     background-color: #dcfce7;
     border: 1px solid #bbf7d0;
 }
 
-.page-container .error-message {
+/* エラーメッセージ */
+.error-message {
     color: #b91c1c;
     background-color: #fee2e2;
     border: 1px solid #fecaca;
@@ -309,6 +303,9 @@ body {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 20px;
+
+    /* カードの高さを内容に応じて調整 */
+    align-items: start;
 }
 
 /* 企業カード */
@@ -465,6 +462,7 @@ body {
    企業詳細画面
 ======================================== */
 
+/* 企業基本情報カード */
 .company-detail-card {
     overflow: hidden;
     margin-bottom: 24px;
@@ -472,6 +470,12 @@ body {
     border: 1px solid #e5eaf2;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+}
+
+/* 企業基本情報カード内のメッセージ */
+.company-detail-card > .success-message,
+.company-detail-card > .error-message {
+    margin: 16px 20px 20px;
 }
 
 .company-detail-header {
